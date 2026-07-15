@@ -39,18 +39,6 @@ The admin section shows **everyone who has signed up** and every vendor applicat
 - **Vendors** — search, filter by category/status, approve/reject/mark pending, CSV export.
 - **Settings** — event name, tagline, date & time (drives the public countdown), venue, and a toggle to open/close registration.
 
-### Default credentials
-
-> ⚠️ **Change these before going live.** They are published in this README, so anyone with repo access can read them.
-
-| | |
-|---|---|
-| URL | `/admin/login` |
-| Email | `admin@pastryquin.com` |
-| Password | `RfF5QS7kpTMF80zXXyAjyUEy` |
-
-To use different credentials, set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in `.env.local`, delete the old row from `admin_users`, and re-run `npm run db:seed`. There is deliberately **no public admin sign-up**; sessions last 24 h and routes are guarded by both `proxy.ts` and server-side checks.
-
 ## Getting started (local)
 
 ```bash
