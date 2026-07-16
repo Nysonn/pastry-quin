@@ -53,7 +53,7 @@ export default function SiteFooter() {
             <div className="mt-5 flex flex-col gap-3 font-alt text-sm text-ivory/70">
               <span className="flex items-center gap-3">
                 <MapPin size={16} strokeWidth={1.5} className="text-gold" />
-                {EVENT.venue}
+                {EVENT.venue}, {EVENT.venueRegion}
               </span>
               <a
                 href="mailto:hello@pastryquin.com"
@@ -62,10 +62,13 @@ export default function SiteFooter() {
                 <Mail size={16} strokeWidth={1.5} className="text-gold" />
                 hello@pastryquin.com
               </a>
-              <span className="flex items-center gap-3">
+              <a
+                href={`tel:${EVENT.contactPhone}`}
+                className="flex items-center gap-3 transition-colors hover:text-gold"
+              >
                 <Phone size={16} strokeWidth={1.5} className="text-gold" />
-                +256 700 000 000
-              </span>
+                {EVENT.contactPhone}
+              </a>
               <a
                 href="https://instagram.com/pastryquin"
                 target="_blank"
