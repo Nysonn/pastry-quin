@@ -1,7 +1,7 @@
 // Event photography — Luxury Cake Showcase.
 export const IMAGES = {
   heroCake:
-    "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784201587/pexels-rebornfilmes-34318078_mdhrie.jpg",
+    "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784222131/IMG-20260716-WA0043_bltdvc.jpg",
   atelierCake:
     "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784201586/pexels-pavel-danilyuk-7180731_jjh8k6.jpg",
   showpieceCake:
@@ -32,7 +32,7 @@ export const HIGHLIGHTS = [
   },
   {
     title: "Live Artistry",
-    description: "Master artists piping, sculpting and finishing live.",
+    description: "Piped, sculpted and finished live, by hand.",
   },
   {
     title: "Curated Tastings",
@@ -49,7 +49,7 @@ export const HIGHLIGHTS = [
 ] as const;
 
 export const REASONS = [
-  "Couture cakes by the country's finest artists",
+  "Couture cakes, one artist's vision",
   "A runway format never seen before",
   "Premium tastings and signature pairings",
   "An evening styled down to the last detail",
