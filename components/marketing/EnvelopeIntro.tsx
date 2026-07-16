@@ -1,7 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import {
+  Children,
+  isValidElement,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
+import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import { Phone } from "lucide-react";
 import { EVENT } from "@/lib/content";
 
@@ -23,6 +30,16 @@ type Stage = "sealed" | "opening" | "rising" | "presenting" | "done";
 
 const LAST_SCENE = 4;
 const SCENE_MS = 3800;
+
+// Choreography: the seal cracks first, then the flap peels open behind it,
+// then the card rises clear before the full invitation takes over.
+const CRACK_MS = 550;
+const FLAP_DELAY_MS = 280;
+const FLAP_DURATION_MS = 1500;
+const FLAP_BEHIND_MS = FLAP_DELAY_MS + Math.round(FLAP_DURATION_MS * 0.55);
+const RISE_START_MS = FLAP_DELAY_MS + Math.round(FLAP_DURATION_MS * 0.78);
+const RISE_DURATION_MS = 1750;
+const PRESENT_MS = RISE_START_MS + 1550;
 
 // Ambient gold dust drifting while the envelope waits to be opened.
 const DUST = [
@@ -117,6 +134,177 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Wax seal split into two halves along "P | Q" — cracks apart when the
+// envelope opens instead of just swinging away with the flap.
+function WaxSeal({
+  cracked,
+  reduceMotion,
+}: {
+  cracked: boolean;
+  reduceMotion: boolean | null;
+}) {
+  const crackTransition = { duration: CRACK_MS / 1000, ease: [0.5, 0, 0.75, 0] as const };
+
+  return (
+    <div className="absolute left-1/2 top-[56%] z-40 -translate-x-1/2 -translate-y-1/2">
+      <div className="relative h-16 w-16">
+        {/* Contact shadow beneath the wax */}
+        <div className="absolute inset-0 translate-y-1 rounded-full bg-black/35 blur-md" />
+
+        {/* Left half — "P" */}
+        <motion.div
+          className="absolute inset-0"
+          style={{ clipPath: "polygon(0 0, 52% 0, 46% 50%, 54% 100%, 0 100%)" }}
+          animate={
+            cracked && !reduceMotion
+              ? { x: -9, y: 5, rotate: -16, opacity: 0 }
+              : { x: 0, y: 0, rotate: 0, opacity: 1 }
+          }
+          transition={crackTransition}
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              borderRadius: "50% 46% 54% 48% / 48% 52% 46% 55%",
+              background:
+                "radial-gradient(circle at 34% 30%, #f3ddac 0%, #c9a15c 42%, #7d5a2c 88%, #6a4a24 100%)",
+              boxShadow:
+                "inset 0 2px 3px rgba(255,247,224,0.55), inset 0 -3px 5px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.45)",
+            }}
+          />
+          <div
+            className="absolute inset-[3px]"
+            style={{
+              borderRadius: "50% 46% 54% 48% / 48% 52% 46% 55%",
+              border: "1px solid rgba(255,247,224,0.35)",
+            }}
+          />
+          <span
+            className="absolute inset-0 flex items-center justify-center pr-[7px] font-display text-[0.95rem] text-ivory/95"
+            style={{ textShadow: "0 1px 1px rgba(0,0,0,0.5), 0 -1px 0 rgba(255,240,210,0.3)" }}
+          >
+            P
+          </span>
+        </motion.div>
+
+        {/* Right half — "Q" */}
+        <motion.div
+          className="absolute inset-0"
+          style={{ clipPath: "polygon(52% 0, 100% 0, 100% 100%, 54% 100%, 46% 50%)" }}
+          animate={
+            cracked && !reduceMotion
+              ? { x: 9, y: 5, rotate: 16, opacity: 0 }
+              : { x: 0, y: 0, rotate: 0, opacity: 1 }
+          }
+          transition={crackTransition}
+        >
+          <div
+            className="absolute inset-0"
+            style={{
+              borderRadius: "46% 50% 48% 54% / 52% 48% 55% 46%",
+              background:
+                "radial-gradient(circle at 66% 30%, #f3ddac 0%, #c9a15c 42%, #7d5a2c 88%, #6a4a24 100%)",
+              boxShadow:
+                "inset 0 2px 3px rgba(255,247,224,0.55), inset 0 -3px 5px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.45)",
+            }}
+          />
+          <div
+            className="absolute inset-[3px]"
+            style={{
+              borderRadius: "46% 50% 48% 54% / 52% 48% 55% 46%",
+              border: "1px solid rgba(255,247,224,0.35)",
+            }}
+          />
+          <span
+            className="absolute inset-0 flex items-center justify-center pl-[7px] font-display text-[0.95rem] text-ivory/95"
+            style={{ textShadow: "0 1px 1px rgba(0,0,0,0.5), 0 -1px 0 rgba(255,240,210,0.3)" }}
+          >
+            Q
+          </span>
+        </motion.div>
+
+        {/* Snap-of-light flash right as the wax breaks */}
+        {cracked && !reduceMotion && (
+          <motion.div
+            className="pointer-events-none absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            style={{
+              background:
+                "linear-gradient(90deg, transparent 46%, rgba(255,247,224,0.9) 50%, transparent 54%)",
+              filter: "blur(0.5px)",
+            }}
+          />
+        )}
+
+        {/* Wax drips, only while intact */}
+        {!cracked && (
+          <>
+            <span
+              className="absolute -bottom-1 left-3 h-2 w-1.5 rounded-b-full"
+              style={{ background: "linear-gradient(180deg, #b98a49, #7d5a2c)" }}
+            />
+            <span
+              className="absolute -bottom-0.5 right-4 h-1.5 w-1 rounded-b-full"
+              style={{ background: "linear-gradient(180deg, #b98a49, #7d5a2c)" }}
+            />
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Wraps a scene's lines so they cascade in individually instead of arriving
+// as one flat block; the whole group still fades as a unit on exit.
+function StaggerScene({
+  children,
+  reduceMotion,
+}: {
+  children: React.ReactNode;
+  reduceMotion: boolean | null;
+}) {
+  const container: Variants = {
+    hidden: { opacity: 0, transition: { duration: 0.35, ease: [0.4, 0, 1, 1] } },
+    show: {
+      opacity: 1,
+      transition: {
+        duration: 0.2,
+        staggerChildren: reduceMotion ? 0 : 0.08,
+        delayChildren: reduceMotion ? 0 : 0.05,
+      },
+    },
+  };
+  const item: Variants = {
+    hidden: {
+      opacity: 0,
+      y: reduceMotion ? 0 : 14,
+      filter: reduceMotion ? "none" : "blur(2px)",
+    },
+    show: {
+      opacity: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+    },
+  };
+
+  return (
+    <motion.div
+      className="flex flex-col items-center"
+      variants={container}
+      initial="hidden"
+      animate="show"
+      exit="hidden"
+    >
+      {Children.map(children, (child) =>
+        isValidElement(child) ? <motion.div variants={item}>{child}</motion.div> : child
+      )}
+    </motion.div>
+  );
+}
+
 export default function EnvelopeIntro() {
   const reduceMotion = useReducedMotion();
   const alreadySeen = useIntroSeen();
@@ -163,9 +351,9 @@ export default function EnvelopeIntro() {
       return;
     }
     setStage("opening");
-    later(() => setFlapBehind(true), 750);
-    later(() => setStage("rising"), 1200);
-    later(() => setStage("presenting"), 2900);
+    later(() => setFlapBehind(true), FLAP_BEHIND_MS);
+    later(() => setStage("rising"), RISE_START_MS);
+    later(() => setStage("presenting"), PRESENT_MS);
   };
 
   const handleOverlayClick = () => {
@@ -181,7 +369,7 @@ export default function EnvelopeIntro() {
 
   const scenes: React.ReactNode[] = [
     // Scene 1 — You're cordially invited
-    <div key="s0" className="flex flex-col items-center">
+    <StaggerScene key="s0" reduceMotion={reduceMotion}>
       <Eyebrow>{EVENT.presenter}</Eyebrow>
       <p className="mt-10 font-alt text-sm tracking-[0.4em] text-charcoal/80 uppercase">
         You&apos;re
@@ -192,10 +380,10 @@ export default function EnvelopeIntro() {
       <p className="font-alt text-sm tracking-[0.4em] text-charcoal/80 uppercase">
         Invited
       </p>
-    </div>,
+    </StaggerScene>,
 
     // Scene 2 — Pastry Quin presents The Cake Runway
-    <div key="s1" className="flex flex-col items-center">
+    <StaggerScene key="s1" reduceMotion={reduceMotion}>
       <Eyebrow>{EVENT.presenter} presents</Eyebrow>
       <p className="mt-8 font-serif-alt text-3xl text-charcoal/70 italic">The</p>
       <p className="mt-1 font-display text-5xl tracking-[0.08em] text-charcoal sm:text-6xl">
@@ -207,10 +395,10 @@ export default function EnvelopeIntro() {
       <p className="mt-6 font-serif-alt text-base text-bronze italic">
         {EVENT.motto}
       </p>
-    </div>,
+    </StaggerScene>,
 
     // Scene 3 — Save the Date
-    <div key="s2" className="flex flex-col items-center">
+    <StaggerScene key="s2" reduceMotion={reduceMotion}>
       <p className="font-serif-alt text-5xl text-charcoal italic sm:text-6xl">
         Save the
       </p>
@@ -223,10 +411,10 @@ export default function EnvelopeIntro() {
       <p className="mt-4 font-alt text-[0.65rem] tracking-[0.3em] text-bronze uppercase">
         {EVENT.gatesNote}
       </p>
-    </div>,
+    </StaggerScene>,
 
     // Scene 4 — The venue
-    <div key="s3" className="flex flex-col items-center">
+    <StaggerScene key="s3" reduceMotion={reduceMotion}>
       <Eyebrow>The Venue</Eyebrow>
       <p className="mt-8 font-display text-4xl leading-tight text-charcoal sm:text-5xl">
         Serena Hotel
@@ -237,10 +425,10 @@ export default function EnvelopeIntro() {
       <p className="mt-6 font-serif-alt text-xl text-bronze italic">
         Entebbe · Uganda
       </p>
-    </div>,
+    </StaggerScene>,
 
     // Scene 5 — full details + Visit Our Website
-    <div key="s4" className="flex flex-col items-center">
+    <StaggerScene key="s4" reduceMotion={reduceMotion}>
       <Eyebrow>{EVENT.presenter} presents</Eyebrow>
       <p className="mt-4 font-display text-4xl text-charcoal sm:text-[2.6rem]">
         The Cake Runway
@@ -279,7 +467,7 @@ export default function EnvelopeIntro() {
       >
         Visit Our Website
       </button>
-    </div>,
+    </StaggerScene>,
   ];
 
   return (
@@ -365,7 +553,10 @@ export default function EnvelopeIntro() {
                 opacity: 0,
                 y: 90,
                 scale: 0.9,
-                transition: { duration: 1, ease: [0.55, 0, 0.55, 0.45] },
+                transition: {
+                  duration: reduceMotion ? 0 : 1,
+                  ease: [0.55, 0, 0.55, 0.45],
+                },
               }}
             >
               <motion.div
@@ -378,6 +569,9 @@ export default function EnvelopeIntro() {
                   stage === "sealed"
                     ? { repeat: Infinity, duration: 3.2, ease: "easeInOut" }
                     : { duration: 0.3 }
+                }
+                whileTap={
+                  !reduceMotion && stage === "sealed" ? { scale: 0.96 } : undefined
                 }
               >
                 {/* Pocket (back of the envelope) */}
@@ -398,8 +592,12 @@ export default function EnvelopeIntro() {
                       "linear-gradient(170deg, #fbf8f3 0%, #f6efe3 60%, #efe3cc 100%)",
                     boxShadow: "0 14px 34px -14px rgba(0,0,0,0.55)",
                   }}
-                  animate={cardRisen ? { y: "-64%" } : { y: 0 }}
-                  transition={{ duration: 1.7, ease: [0.22, 1, 0.36, 1] }}
+                  animate={
+                    cardRisen
+                      ? { y: "-64%", rotate: reduceMotion ? 0 : [0, -1.2, 0.6, 0] }
+                      : { y: 0, rotate: 0 }
+                  }
+                  transition={{ duration: RISE_DURATION_MS / 1000, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <div className="absolute inset-2 rounded-md border border-gold/35" />
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
@@ -459,7 +657,23 @@ export default function EnvelopeIntro() {
                   />
                 </div>
 
-                {/* Top flap — hinges open from the top edge */}
+                {/* Contact shadow the flap casts as it lifts away */}
+                <motion.div
+                  className="pointer-events-none absolute inset-x-0 top-0 z-[25] h-[56%] origin-top"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse 90% 60% at 50% 100%, rgba(0,0,0,0.32), transparent 72%)",
+                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: flapOpen ? 0.45 : 0 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: flapOpen ? FLAP_DELAY_MS / 1000 + 0.1 : 0,
+                    ease: "easeOut",
+                  }}
+                />
+
+                {/* Top flap — hinges open from the top edge, right after the seal cracks */}
                 <motion.div
                   className={`absolute inset-x-0 top-0 h-[56%] ${
                     flapBehind ? "z-[5]" : "z-30"
@@ -469,7 +683,11 @@ export default function EnvelopeIntro() {
                     transformStyle: "preserve-3d",
                   }}
                   animate={flapOpen ? { rotateX: 176 } : { rotateX: 0 }}
-                  transition={{ duration: 1.6, ease: [0.45, 0, 0.2, 1] }}
+                  transition={{
+                    duration: FLAP_DURATION_MS / 1000,
+                    delay: flapOpen ? FLAP_DELAY_MS / 1000 : 0,
+                    ease: [0.45, 0, 0.2, 1],
+                  }}
                 >
                   {/* Outer face */}
                   <div
@@ -503,21 +721,12 @@ export default function EnvelopeIntro() {
                       backfaceVisibility: "hidden",
                     }}
                   />
-                  {/* Gold wax seal at the flap tip */}
-                  <div
-                    className="absolute bottom-0 left-1/2 flex h-14 w-14 -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full font-display text-sm text-ivory"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 32% 28%, #f0d9a8 0%, #c9a15c 45%, #8a6633 100%)",
-                      boxShadow:
-                        "0 6px 16px rgba(0,0,0,0.45), inset 0 -2px 4px rgba(0,0,0,0.25)",
-                      backfaceVisibility: "hidden",
-                      transform: "translateZ(1px)",
-                    }}
-                  >
-                    PQ
-                  </div>
                 </motion.div>
+
+                {/* Wax seal — sits over the fold line, cracks apart as the flap lifts */}
+                {(stage === "sealed" || stage === "opening") && (
+                  <WaxSeal cracked={stage === "opening"} reduceMotion={reduceMotion} />
+                )}
               </motion.div>
 
               {/* Prompt */}
@@ -536,11 +745,26 @@ export default function EnvelopeIntro() {
                     : { repeat: Infinity, duration: 2.4 }
                 }
               >
-                Tap the seal to open your invitation
+                Tap to break the seal
               </motion.p>
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Soft flash that masks the cut from the rising card to the full invitation */}
+        {presenting && (
+          <motion.div
+            key="crossfade-flash"
+            className="pointer-events-none absolute inset-0 z-[8]"
+            initial={{ opacity: reduceMotion ? 0 : 0.9 }}
+            animate={{ opacity: 0 }}
+            transition={{ duration: 0.9, ease: "easeOut" }}
+            style={{
+              background:
+                "radial-gradient(circle at 50% 55%, rgba(255,247,224,0.55) 0%, rgba(243,229,203,0.18) 35%, transparent 70%)",
+            }}
+          />
+        )}
 
         {/* ————— The invitation, presented full ————— */}
         {presenting && (
@@ -549,10 +773,14 @@ export default function EnvelopeIntro() {
             initial={
               reduceMotion
                 ? { opacity: 0 }
-                : { opacity: 0, y: 140, scale: 0.62 }
+                : { opacity: 0, y: 110, scale: 0.72, filter: "blur(10px)" }
             }
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            transition={{
+              duration: reduceMotion ? 0 : 1.2,
+              ease: [0.22, 1, 0.36, 1],
+              delay: reduceMotion ? 0 : 0.05,
+            }}
           >
             <div
               className="relative flex h-[min(80svh,36rem)] w-[min(90vw,23rem)] flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-gold/30 px-7 py-10 text-center"
@@ -574,18 +802,7 @@ export default function EnvelopeIntro() {
               <PampasEmboss className="pointer-events-none absolute -bottom-2 -left-4 h-64 w-40 opacity-80" />
               <div className="pointer-events-none absolute inset-3 rounded-[1.15rem] border border-gold/20" />
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={scene}
-                  className="relative flex flex-col items-center"
-                  initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12 }}
-                  transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  {scenes[scene]}
-                </motion.div>
-              </AnimatePresence>
+              <AnimatePresence mode="wait">{scenes[scene]}</AnimatePresence>
 
               {/* Scene progress dots */}
               <div className="absolute bottom-5 flex gap-2">
