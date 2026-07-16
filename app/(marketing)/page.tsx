@@ -133,8 +133,8 @@ export default async function HomePage() {
             />
             <div className="mt-8 space-y-5 leading-relaxed text-charcoal/75">
               <p>
-                One evening. One residence. The country&apos;s finest cake
-                artists presenting their showpieces on a runway —{" "}
+                One evening. One artist. A showcase of cakes on a
+                runway —{" "}
                 <em className="font-serif-alt text-lg text-bronze">
                   crafted to be seen, styled to be tasted.
                 </em>
