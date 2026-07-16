@@ -1,6 +1,6 @@
 import SiteHeader from "@/components/marketing/SiteHeader";
 import SiteFooter from "@/components/marketing/SiteFooter";
-import ClocheIntro from "@/components/marketing/ClocheIntro";
+import EnvelopeIntro from "@/components/marketing/EnvelopeIntro";
 
 export default function MarketingLayout({
   children,
@@ -9,7 +9,7 @@ export default function MarketingLayout({
 }) {
   return (
     <>
-      <ClocheIntro />
+      <EnvelopeIntro />
       <SiteHeader />
       <main className="flex-1">{children}</main>
       <SiteFooter />

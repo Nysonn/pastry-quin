@@ -14,7 +14,11 @@ export const EVENT = {
   motto: "Where cake becomes the moment.",
   presenter: "Pastry Quin",
   partnerLine: "Official Partner — Baileys",
-  venue: "White Cake Residence",
+  venue: "Serena Hotel Kigo",
+  venueRegion: "Entebbe, Uganda",
+  saveTheDate: "3rd August 2026",
+  gatesNote: "Gates close at 2 PM",
+  contactPhone: "0760856437",
 } as const;
 
 export const HIGHLIGHTS = [
