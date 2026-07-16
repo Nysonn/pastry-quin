@@ -7,14 +7,12 @@ import {
   LayoutDashboard,
   LogOut,
   Settings,
-  Store,
   Users,
 } from "lucide-react";
 
 const LINKS = [
   { href: "/admin/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/admin/dashboard/registrations", label: "Registrations", icon: Users },
-  { href: "/admin/dashboard/vendors", label: "Vendors", icon: Store },
+  { href: "/admin/dashboard/registrations", label: "RSVPs", icon: Users },
   { href: "/admin/dashboard/settings", label: "Settings", icon: Settings },
 ];
 

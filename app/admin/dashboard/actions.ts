@@ -4,11 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import {
-  eventSettings,
-  registrations,
-  vendorApplications,
-} from "@/lib/db/schema";
+import { eventSettings, registrations } from "@/lib/db/schema";
 import { destroySession, getSession } from "@/lib/auth/session";
 
 async function requireAdmin() {
@@ -32,19 +28,6 @@ export async function setRegistrationStatus(formData: FormData) {
     .set({ status })
     .where(eq(registrations.id, id));
   revalidatePath("/admin/dashboard/registrations");
-  revalidatePath("/admin/dashboard");
-}
-
-export async function setVendorStatus(formData: FormData) {
-  await requireAdmin();
-  const id = String(formData.get("id"));
-  const status = String(formData.get("status"));
-  if (!id || !["pending", "approved", "rejected"].includes(status)) return;
-  await db
-    .update(vendorApplications)
-    .set({ status })
-    .where(eq(vendorApplications.id, id));
-  revalidatePath("/admin/dashboard/vendors");
   revalidatePath("/admin/dashboard");
 }
 

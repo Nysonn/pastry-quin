@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Registration for Cake Runway is currently closed. Follow @pastryquin for updates.",
+          "RSVPs for Cake Runway are currently closed. Follow @pastryquin for updates.",
       },
       { status: 403 }
     );
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("Failed to insert registration:", error);
     return NextResponse.json(
-      { error: "We couldn't save your registration — please try again." },
+      { error: "We couldn't save your RSVP — please try again." },
       { status: 500 }
     );
   }

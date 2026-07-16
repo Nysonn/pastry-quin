@@ -19,6 +19,16 @@
   --shadow-warm-lg: 0 24px 60px -16px rgba(169, 121, 59, 0.3);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
   background: var(--color-ivory);
   color: var(--color-charcoal);

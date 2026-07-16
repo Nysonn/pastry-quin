@@ -1,16 +1,16 @@
 import { z } from "zod";
 
 export const GUEST_TYPES = [
-  "Bride",
-  "Groom",
-  "Wedding Planner",
+  "Cake Enthusiast",
   "Cake Designer",
+  "Pastry Professional",
   "Event Planner",
   "Luxury Brand",
   "Hospitality Professional",
   "Food Lover",
   "Lifestyle Influencer",
   "Corporate Client",
+  "Media & Press",
 ] as const;
 
 export const registrationSchema = z.object({

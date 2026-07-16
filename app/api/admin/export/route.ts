@@ -1,6 +1,6 @@
 import { desc } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { registrations, vendorApplications } from "@/lib/db/schema";
+import { registrations } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/session";
 
 function csvEscape(value: unknown): string {
@@ -56,43 +56,11 @@ export async function GET(request: Request) {
         r.createdAt,
       ])
     );
-    return csvResponse(csv, "cake-runway-registrations.csv");
-  }
-
-  if (table === "vendors") {
-    const rows = await db
-      .select()
-      .from(vendorApplications)
-      .orderBy(desc(vendorApplications.createdAt));
-    const csv = toCsv(
-      [
-        "Business Name",
-        "Contact Name",
-        "Email",
-        "Phone",
-        "Category",
-        "Website / Instagram",
-        "Message",
-        "Status",
-        "Applied At",
-      ],
-      rows.map((v) => [
-        v.businessName,
-        v.contactName,
-        v.email,
-        v.phone,
-        v.vendorCategory,
-        v.websiteOrInstagram,
-        v.message,
-        v.status,
-        v.createdAt,
-      ])
-    );
-    return csvResponse(csv, "cake-runway-vendor-applications.csv");
+    return csvResponse(csv, "cake-runway-rsvps.csv");
   }
 
   return Response.json(
-    { error: "Unknown table — use ?table=registrations or ?table=vendors" },
+    { error: "Unknown table — use ?table=registrations" },
     { status: 400 }
   );
 }

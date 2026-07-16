@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { AtSign, Mail, MapPin, Phone } from "lucide-react";
 import { EVENT } from "@/lib/content";
 
@@ -32,24 +31,18 @@ export default function SiteFooter() {
               Explore
             </p>
             <nav className="mt-5 flex flex-col gap-3 font-alt text-sm text-ivory/70">
-              <Link href="/about" className="transition-colors hover:text-gold">
-                About the Event
-              </Link>
-              <Link href="/experiences" className="transition-colors hover:text-gold">
-                Featured Experiences
-              </Link>
-              <Link href="/baileys" className="transition-colors hover:text-gold">
-                The Baileys Partnership
-              </Link>
-              <Link href="/gallery" className="transition-colors hover:text-gold">
+              <a href="#about" className="transition-colors hover:text-gold">
+                The Showcase
+              </a>
+              <a href="#highlights" className="transition-colors hover:text-gold">
+                The Evening
+              </a>
+              <a href="#gallery" className="transition-colors hover:text-gold">
                 Gallery
-              </Link>
-              <Link href="/vendors" className="transition-colors hover:text-gold">
-                Vendor Opportunities
-              </Link>
-              <Link href="/register" className="transition-colors hover:text-gold">
-                Register to Attend
-              </Link>
+              </a>
+              <a href="#rsvp" className="transition-colors hover:text-gold">
+                RSVP
+              </a>
             </nav>
           </div>
 
