@@ -30,11 +30,11 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pastry Quin Cake Runway — A Celebration of Cake Artistry",
+    default: "Pastry Quin Cake Runway — A Luxury Showcase of Cake Artistry",
     template: "%s — Pastry Quin Cake Runway",
   },
   description:
-    "Where cake becomes the moment. A curated celebration of cake artistry, design, and luxury experiences at White Cake Residence — presented by Pastry Quin, official beverage partner Baileys.",
+    "Where cake becomes the moment. A luxury showcase of cake artistry at White Cake Residence — presented by Pastry Quin, official partner Baileys. RSVP free.",
 };
 
 export default function RootLayout({
