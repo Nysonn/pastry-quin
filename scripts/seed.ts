@@ -20,7 +20,7 @@ async function main() {
       eventName: "Pastry Quin Cake Runway",
       tagline: "A Luxury Showcase of Cake Artistry",
       eventDate: new Date("2026-08-03T14:00:00+03:00"),
-      venue: "White Cake Residence",
+      venue: "Serena Hotel Kigo, Entebbe",
       registrationOpen: true,
     });
     console.log("Seeded event_settings");
