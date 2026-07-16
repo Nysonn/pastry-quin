@@ -28,7 +28,7 @@ export const HIGHLIGHTS = [
   },
   {
     title: "Sculptural Installations",
-    description: "Large-scale showpieces staged through the residence.",
+    description: "Large-scale showpieces staged through the venue.",
   },
   {
     title: "Live Artistry",
