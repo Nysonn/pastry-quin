@@ -127,16 +127,20 @@ function WaxSeal({
   return (
     <div className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2">
       <motion.div className="relative h-24 w-24 sm:h-28 sm:w-28">
-        {/* Contact shadow */}
-        <div className="absolute inset-0 translate-y-2 rounded-full bg-black/40 blur-lg" />
+        {/* Contact shadow — fades with the wax, doesn't linger once cracked */}
+        {!cracked && (
+          <div className="absolute inset-0 translate-y-2 rounded-full bg-black/40 blur-lg" />
+        )}
 
         {/* Stamped coin-edge ring, just inside the outer rim */}
-        <div
-          className="absolute inset-[5px] rounded-full opacity-80"
-          style={{
-            border: "1.5px dotted rgba(255,247,224,0.55)",
-          }}
-        />
+        {!cracked && (
+          <div
+            className="absolute inset-[5px] rounded-full opacity-80"
+            style={{
+              border: "1.5px dotted rgba(255,247,224,0.55)",
+            }}
+          />
+        )}
 
         {/* Left half — "P" */}
         <motion.div
