@@ -20,10 +20,10 @@ function useIntroSeen() {
 
 type Stage = "sealed" | "presenting" | "done";
 
-// Reference choreography: tap the seal → a quick dissolve (no flap, no
-// fold animation — the cover simply fades as the hero fades in beneath
-// it, settling from a soft blur) straight into the hero content.
-const CROSSFADE_S = 0.38;
+// Tap the seal → a slow, cinematic dissolve (no flap, no fold — the
+// cover fades and gently pulls back as the hero settles in beneath it
+// from a soft blur and a slight zoom).
+const CROSSFADE_S = 1.3;
 
 // Scene 0 is the hero; the final scene (website) never auto-advances.
 const LAST_SCENE = 6;
@@ -196,7 +196,7 @@ export default function EnvelopeIntro() {
   };
 
   const presenting = stage === "presenting";
-  const crossfade = { duration: reduceMotion ? 0 : CROSSFADE_S };
+  const crossfade = { duration: reduceMotion ? 0 : CROSSFADE_S, ease: [0.4, 0, 0.2, 1] as const };
 
   // The seven reveals + the website scene, paced like the reference's
   // downward scroll: script heading above, spaced capitals beneath.
@@ -254,22 +254,27 @@ export default function EnvelopeIntro() {
     </div>,
   ];
 
-  // Scroll-style transitions: the outgoing section slides up and away as
-  // the next slides in from below, exactly like the reference's scroll.
-  const sectionEnter = reduceMotion ? { opacity: 0 } : { opacity: 0, y: 56 };
+  // Scroll-style transitions: the outgoing section slides up and away,
+  // slowly and with a gentle breathing scale, as the next glides in from
+  // below — deliberate and cinematic rather than a quick cut.
+  const sectionEnter = reduceMotion
+    ? { opacity: 0 }
+    : { opacity: 0, y: 80, scale: 0.97 };
   const sectionShow = {
     opacity: 1,
     y: 0,
+    scale: 1,
     transition: {
-      duration: reduceMotion ? 0.25 : 0.65,
-      ease: [0.25, 0.8, 0.35, 1] as const,
+      duration: reduceMotion ? 0.25 : 1.05,
+      ease: [0.22, 0.75, 0.3, 1] as const,
     },
   };
   const sectionExit = {
     opacity: 0,
-    y: reduceMotion ? 0 : -56,
+    y: reduceMotion ? 0 : -80,
+    scale: reduceMotion ? 1 : 1.03,
     transition: {
-      duration: reduceMotion ? 0.2 : 0.55,
+      duration: reduceMotion ? 0.2 : 0.9,
       ease: [0.5, 0, 0.75, 0.4] as const,
     },
   };
@@ -282,7 +287,7 @@ export default function EnvelopeIntro() {
           className="fixed inset-0 z-50 overflow-hidden bg-charcoal"
           exit={{
             y: "-100%",
-            transition: { duration: reduceMotion ? 0 : 0.8, ease: [0.65, 0, 0.35, 1] },
+            transition: { duration: reduceMotion ? 0 : 1.15, ease: [0.65, 0, 0.35, 1] },
           }}
           onClick={handleOverlayClick}
           role="button"
@@ -302,8 +307,8 @@ export default function EnvelopeIntro() {
             initial={false}
             animate={
               stage === "sealed"
-                ? { opacity: 0, filter: "blur(8px)" }
-                : { opacity: 1, filter: "blur(0px)" }
+                ? { opacity: 0, filter: "blur(8px)", scale: reduceMotion ? 1 : 1.06 }
+                : { opacity: 1, filter: "blur(0px)", scale: 1 }
             }
             transition={crossfade}
           >
@@ -352,7 +357,11 @@ export default function EnvelopeIntro() {
               <motion.div
                 key="cover"
                 className="absolute inset-0 z-20"
-                exit={{ opacity: 0, transition: crossfade }}
+                exit={{
+                  opacity: 0,
+                  scale: reduceMotion ? 1 : 1.08,
+                  transition: crossfade,
+                }}
               >
                 <div
                   className="absolute inset-0"
