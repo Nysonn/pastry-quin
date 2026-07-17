@@ -5,11 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import { Check, Loader2 } from "lucide-react";
-import {
-  GUEST_TYPES,
-  registrationSchema,
-  type RegistrationInput,
-} from "@/lib/validation/registration";
+import { registrationSchema, type RegistrationInput } from "@/lib/validation/registration";
 import { errorClass, inputClass, labelClass } from "./field-styles";
 
 export default function RegistrationForm() {
@@ -119,32 +115,6 @@ export default function RegistrationForm() {
           {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
         </div>
         <div>
-          <label htmlFor="guestType" className={labelClass}>
-            I am a... *
-          </label>
-          <select
-            id="guestType"
-            className={inputClass}
-            defaultValue=""
-            {...register("guestType")}
-          >
-            <option value="" disabled>
-              Choose the best fit
-            </option>
-            {GUEST_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-          {errors.guestType && (
-            <p className={errorClass}>{errors.guestType.message}</p>
-          )}
-        </div>
-      </div>
-
-      <div className="grid gap-6 sm:grid-cols-2">
-        <div>
           <label htmlFor="numberOfGuests" className={labelClass}>
             Number of Guests *
           </label>
@@ -160,18 +130,19 @@ export default function RegistrationForm() {
             <p className={errorClass}>{errors.numberOfGuests.message}</p>
           )}
         </div>
-        <div>
-          <label htmlFor="hearAboutUs" className={labelClass}>
-            How did you hear about us?
-          </label>
-          <input
-            id="hearAboutUs"
-            type="text"
-            placeholder="Instagram, a friend, ..."
-            className={inputClass}
-            {...register("hearAboutUs")}
-          />
-        </div>
+      </div>
+
+      <div>
+        <label htmlFor="hearAboutUs" className={labelClass}>
+          How did you hear about us?
+        </label>
+        <input
+          id="hearAboutUs"
+          type="text"
+          placeholder="Instagram, a friend, ..."
+          className={inputClass}
+          {...register("hearAboutUs")}
+        />
       </div>
 
       <div>

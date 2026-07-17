@@ -19,9 +19,7 @@ export const registrationSchema = z.object({
     .min(2, "Please tell us your full name (at least 2 characters)."),
   email: z.email("That email looks incomplete — please check it."),
   phone: z.string().max(30).optional().or(z.literal("")),
-  guestType: z.enum(GUEST_TYPES, {
-    error: "Please choose the option that best describes you.",
-  }),
+  guestType: z.enum(GUEST_TYPES).optional(),
   numberOfGuests: z.coerce
     .number<number>()
     .int("Guests must be a whole number.")
