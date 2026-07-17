@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       fullName: data.fullName,
       email: data.email,
       phone: data.phone || null,
-      guestType: data.guestType,
+      guestType: data.guestType || null,
       numberOfGuests: data.numberOfGuests,
       hearAboutUs: data.hearAboutUs || null,
       notes: data.notes || null,
