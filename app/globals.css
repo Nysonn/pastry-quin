@@ -1,13 +1,15 @@
 @import "tailwindcss";
 
 @theme {
+  /* Soft tropical palette — warm cream/peach base, terracotta + deep
+     emerald accents, gold as the shared metallic thread. */
   --color-champagne: #f3e5cb;
   --color-ivory: #fbf8f3;
   --color-cream: #f6efe3;
   --color-soft-beige: #e9dcc3;
-  --color-bronze: #a9793b;
-  --color-rose-gold: #b76e79;
-  --color-charcoal: #2a211a;
+  --color-bronze: #c1694f;
+  --color-rose-gold: #c98a86;
+  --color-charcoal: #1b2b22;
   --color-gold: #c9a15c;
   --color-emerald: #0f4d3a;
   --color-emerald-deep: #0a3527;
@@ -20,8 +22,8 @@
   --font-alt: var(--font-manrope), sans-serif;
   --font-script: var(--font-great-vibes), cursive;
 
-  --shadow-warm: 0 10px 40px -12px rgba(169, 121, 59, 0.25);
-  --shadow-warm-lg: 0 24px 60px -16px rgba(169, 121, 59, 0.3);
+  --shadow-warm: 0 10px 40px -12px rgba(201, 161, 92, 0.25);
+  --shadow-warm-lg: 0 24px 60px -16px rgba(201, 161, 92, 0.3);
 }
 
 html {
