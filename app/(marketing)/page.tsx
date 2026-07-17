@@ -15,9 +15,8 @@ import { EVENT, HIGHLIGHTS, IMAGES, REASONS } from "@/lib/content";
 export const dynamic = "force-dynamic";
 
 const GALLERY = [
-  { src: IMAGES.heroCake, alt: "Couture cake showpiece", tall: true },
-  { src: IMAGES.atelierCake, alt: "Cake artist at work", tall: false },
-  { src: IMAGES.showpieceCake, alt: "Luxury celebration cake", tall: true },
+  { src: IMAGES.heroCake, alt: "Couture cake showpiece" },
+  { src: IMAGES.showpieceCake, alt: "Luxury celebration cake" },
 ];
 
 export default async function HomePage() {
@@ -39,7 +38,7 @@ export default async function HomePage() {
           className="absolute inset-0 z-[1]"
           style={{
             background:
-              "radial-gradient(ellipse 90% 70% at 50% 45%, transparent 45%, rgba(42,33,26,0.55) 100%)",
+              "radial-gradient(ellipse 90% 70% at 50% 45%, transparent 45%, rgba(27,43,34,0.55) 100%)",
           }}
         />
         <div className="relative z-10 mx-auto max-w-4xl px-6 pt-24 pb-16 text-center text-ivory sm:px-10 md:pt-32 md:pb-20">
@@ -110,14 +109,24 @@ export default async function HomePage() {
       </section>
 
       {/* About */}
-      <section id="about" className="scroll-mt-24 py-24">
-        <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
+      <section id="about" className="relative scroll-mt-24 overflow-hidden py-24">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-24 -top-20 h-72 w-72 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(183,201,173,0.35), transparent 70%)" }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-24 -right-16 h-80 w-80 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(226,168,147,0.28), transparent 70%)" }}
+        />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
           <Reveal>
             <TiltCard>
               <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-warm-lg">
                 <Image
-                  src={IMAGES.atelierCake}
-                  alt="Cake artistry in the making"
+                  src={IMAGES.showpieceCake}
+                  alt="Cake craftsmanship, up close"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
@@ -151,8 +160,18 @@ export default async function HomePage() {
       <div className="gold-hairline mx-auto max-w-5xl" />
 
       {/* Highlights */}
-      <section id="highlights" className="scroll-mt-24 bg-cream py-24">
-        <div className="mx-auto max-w-7xl px-6">
+      <section id="highlights" className="relative scroll-mt-24 overflow-hidden bg-cream py-24">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-20 top-0 h-64 w-64 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(226,168,147,0.3), transparent 70%)" }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-16 -left-20 h-72 w-72 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(183,201,173,0.32), transparent 70%)" }}
+        />
+        <div className="relative mx-auto max-w-7xl px-6">
           <Reveal>
             <SectionHeading
               eyebrow="The Evening"
@@ -184,27 +203,25 @@ export default async function HomePage() {
       </section>
 
       {/* Gallery */}
-      <section id="gallery" className="scroll-mt-24 py-24">
-        <div className="mx-auto max-w-7xl px-6">
+      <section id="gallery" className="relative scroll-mt-24 overflow-hidden py-24">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-16 left-1/3 h-64 w-64 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(183,201,173,0.28), transparent 70%)" }}
+        />
+        <div className="relative mx-auto max-w-7xl px-6">
           <Reveal>
             <SectionHeading eyebrow="A First Look" title="The artistry awaiting you" />
           </Reveal>
-          <RevealStagger className="mt-16 grid gap-6 sm:grid-cols-3">
+          <RevealStagger className="mx-auto mt-16 grid max-w-3xl gap-6 sm:grid-cols-2">
             {GALLERY.map((img, i) => (
-              <RevealItem
-                key={img.alt}
-                className={i === 1 ? "sm:translate-y-10" : ""}
-              >
-                <div
-                  className={`group relative overflow-hidden rounded-2xl shadow-warm-lg ${
-                    img.tall ? "aspect-[3/4]" : "aspect-[3/4] sm:aspect-[4/5]"
-                  }`}
-                >
+              <RevealItem key={img.alt} className={i === 1 ? "sm:translate-y-10" : ""}>
+                <div className="group relative aspect-[3/4] overflow-hidden rounded-2xl shadow-warm-lg">
                   <Image
                     src={img.src}
                     alt={img.alt}
                     fill
-                    sizes="(max-width: 640px) 100vw, 33vw"
+                    sizes="(max-width: 640px) 100vw, 50vw"
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
