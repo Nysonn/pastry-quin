@@ -9,11 +9,16 @@
   --color-rose-gold: #b76e79;
   --color-charcoal: #2a211a;
   --color-gold: #c9a15c;
+  --color-emerald: #0f4d3a;
+  --color-emerald-deep: #0a3527;
+  --color-sage: #b7c9ad;
+  --color-coral: #e2a893;
 
   --font-display: var(--font-playfair), serif;
   --font-serif-alt: var(--font-cormorant), serif;
   --font-sans: var(--font-inter), sans-serif;
   --font-alt: var(--font-manrope), sans-serif;
+  --font-script: var(--font-great-vibes), cursive;
 
   --shadow-warm: 0 10px 40px -12px rgba(169, 121, 59, 0.25);
   --shadow-warm-lg: 0 24px 60px -16px rgba(169, 121, 59, 0.3);

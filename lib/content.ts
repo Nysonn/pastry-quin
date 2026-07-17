@@ -19,6 +19,7 @@ export const EVENT = {
   saveTheDate: "3rd August 2026",
   gatesNote: "Gates close at 2 PM",
   contactPhone: "0760856437",
+  rsvpDeadline: "25th July",
 } as const;
 
 export const HIGHLIGHTS = [
