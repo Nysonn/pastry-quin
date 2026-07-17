@@ -17,7 +17,6 @@ export default function RegistrationForm() {
     formState: { errors, isSubmitting },
   } = useForm<RegistrationInput>({
     resolver: zodResolver(registrationSchema),
-    defaultValues: { numberOfGuests: 1 },
   });
 
   const onSubmit = handleSubmit(async (data) => {
@@ -99,50 +98,19 @@ export default function RegistrationForm() {
         </div>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <div>
-          <label htmlFor="phone" className={labelClass}>
-            Phone
-          </label>
-          <input
-            id="phone"
-            type="tel"
-            autoComplete="tel"
-            placeholder="+256 ..."
-            className={inputClass}
-            {...register("phone")}
-          />
-          {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
-        </div>
-        <div>
-          <label htmlFor="numberOfGuests" className={labelClass}>
-            Number of Guests *
-          </label>
-          <input
-            id="numberOfGuests"
-            type="number"
-            min={1}
-            max={10}
-            className={inputClass}
-            {...register("numberOfGuests")}
-          />
-          {errors.numberOfGuests && (
-            <p className={errorClass}>{errors.numberOfGuests.message}</p>
-          )}
-        </div>
-      </div>
-
       <div>
-        <label htmlFor="hearAboutUs" className={labelClass}>
-          How did you hear about us?
+        <label htmlFor="phone" className={labelClass}>
+          Phone
         </label>
         <input
-          id="hearAboutUs"
-          type="text"
-          placeholder="Instagram, a friend, ..."
+          id="phone"
+          type="tel"
+          autoComplete="tel"
+          placeholder="+256 ..."
           className={inputClass}
-          {...register("hearAboutUs")}
+          {...register("phone")}
         />
+        {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
       </div>
 
       <div>

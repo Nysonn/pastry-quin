@@ -24,7 +24,8 @@ export const registrationSchema = z.object({
     .number<number>()
     .int("Guests must be a whole number.")
     .min(1, "You are at least one guest!")
-    .max(10, "For parties larger than 10, please contact us directly."),
+    .max(10, "For parties larger than 10, please contact us directly.")
+    .optional(),
   hearAboutUs: z.string().max(200).optional().or(z.literal("")),
   notes: z
     .string()

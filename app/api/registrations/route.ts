@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       email: data.email,
       phone: data.phone || null,
       guestType: data.guestType || null,
-      numberOfGuests: data.numberOfGuests,
+      numberOfGuests: data.numberOfGuests ?? 1,
       hearAboutUs: data.hearAboutUs || null,
       notes: data.notes || null,
     });

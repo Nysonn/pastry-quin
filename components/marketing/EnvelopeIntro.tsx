@@ -20,10 +20,12 @@ function useIntroSeen() {
 
 type Stage = "sealed" | "presenting" | "done";
 
-// Tap the seal → a slow, cinematic dissolve (no flap, no fold — the
-// cover fades and gently pulls back as the hero settles in beneath it
-// from a soft blur and a slight zoom).
-const CROSSFADE_S = 1.3;
+// Tap the seal → the cover fades and gently pulls back first; the hero
+// only starts fading in once the cover is nearly gone, so "You Are
+// Cordially Invited" never overlaps the hero's own text.
+const COVER_EXIT_S = 0.95;
+const HERO_ENTER_DELAY_S = 0.8;
+const HERO_ENTER_DURATION_S = 1.2;
 
 // Scene 0 is the hero; the final scene (website) never auto-advances.
 const LAST_SCENE = 6;
@@ -196,7 +198,12 @@ export default function EnvelopeIntro() {
   };
 
   const presenting = stage === "presenting";
-  const crossfade = { duration: reduceMotion ? 0 : CROSSFADE_S, ease: [0.4, 0, 0.2, 1] as const };
+  const coverExit = { duration: reduceMotion ? 0 : COVER_EXIT_S, ease: [0.4, 0, 0.2, 1] as const };
+  const heroEnter = {
+    delay: reduceMotion ? 0 : HERO_ENTER_DELAY_S,
+    duration: reduceMotion ? 0 : HERO_ENTER_DURATION_S,
+    ease: [0.4, 0, 0.2, 1] as const,
+  };
 
   // The seven reveals + the website scene, paced like the reference's
   // downward scroll: script heading above, spaced capitals beneath.
@@ -254,9 +261,10 @@ export default function EnvelopeIntro() {
     </div>,
   ];
 
-  // Scroll-style transitions: the outgoing section slides up and away,
-  // slowly and with a gentle breathing scale, as the next glides in from
-  // below — deliberate and cinematic rather than a quick cut.
+  // Scroll-style transitions: the outgoing section fully fades and glides
+  // away before the next one begins entering (mode="wait" below), so
+  // consecutive lines of text are never on screen — and never overlapping
+  // — at the same time.
   const sectionEnter = reduceMotion
     ? { opacity: 0 }
     : { opacity: 0, y: 80, scale: 0.97 };
@@ -265,7 +273,7 @@ export default function EnvelopeIntro() {
     y: 0,
     scale: 1,
     transition: {
-      duration: reduceMotion ? 0.25 : 1.05,
+      duration: reduceMotion ? 0.25 : 1.2,
       ease: [0.22, 0.75, 0.3, 1] as const,
     },
   };
@@ -274,7 +282,7 @@ export default function EnvelopeIntro() {
     y: reduceMotion ? 0 : -80,
     scale: reduceMotion ? 1 : 1.03,
     transition: {
-      duration: reduceMotion ? 0.2 : 0.9,
+      duration: reduceMotion ? 0.2 : 1,
       ease: [0.5, 0, 0.75, 0.4] as const,
     },
   };
@@ -310,7 +318,7 @@ export default function EnvelopeIntro() {
                 ? { opacity: 0, filter: "blur(8px)", scale: reduceMotion ? 1 : 1.06 }
                 : { opacity: 1, filter: "blur(0px)", scale: 1 }
             }
-            transition={crossfade}
+            transition={heroEnter}
           >
             <div
               className="absolute inset-0 opacity-[0.05] mix-blend-multiply"
@@ -334,8 +342,9 @@ export default function EnvelopeIntro() {
               style={{ background: "radial-gradient(circle, rgba(183,201,173,0.34), transparent 70%)" }}
             />
 
-            {/* Sections — absolutely stacked so exits and entries overlap */}
-            <AnimatePresence>
+            {/* Sections — mode="wait" so one fully fades out before the
+                next fades in; their text is never simultaneously visible */}
+            <AnimatePresence mode="wait">
               {presenting && (
                 <motion.div
                   key={scene}
@@ -360,7 +369,7 @@ export default function EnvelopeIntro() {
                 exit={{
                   opacity: 0,
                   scale: reduceMotion ? 1 : 1.08,
-                  transition: crossfade,
+                  transition: coverExit,
                 }}
               >
                 <div
