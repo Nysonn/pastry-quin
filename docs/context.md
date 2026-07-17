@@ -43,24 +43,24 @@ The site reads like a fashion-house event program: editorial, restrained, high-c
 
 ## 3. Design System
 
-### Tokens (unchanged — approved)
+### Tokens (soft tropical palette)
 
 ```
 colors:
   champagne #F3E5CB · ivory #FBF8F3 · cream #F6EFE3 · soft-beige #E9DCC3
-  bronze #A9793B · rose-gold #B76E79 · charcoal #2A211A · gold #C9A15C
+  bronze #C1694F · rose-gold #C98A86 · charcoal #1B2B22 · gold #C9A15C
+  emerald #0F4D3A · emerald-deep #0A3527 · sage #B7C9AD · coral #E2A893
 
 fonts:
-  display: Playfair Display · serif-alt: Cormorant Garamond
+  display: Playfair Display · serif-alt: Cormorant Garamond · script: Great Vibes
   body: Inter · body-alt: Manrope
 ```
 
 ### Imagery
 
-Three real event photos (Cloudinary), referenced in `lib/content.ts` → `IMAGES`:
-- `heroCake` — hero + gallery
-- `atelierCake` — showcase/about + gallery
-- `showpieceCake` — RSVP backdrop + gallery
+Two real event photos (Cloudinary), referenced in `lib/content.ts` → `IMAGES`:
+- `heroCake` — hero + about + gallery
+- `showpieceCake` — about + gallery + RSVP backdrop
 
 ### Signature element — the Cloche Reveal
 

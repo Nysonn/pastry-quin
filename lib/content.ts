@@ -2,8 +2,6 @@
 export const IMAGES = {
   heroCake:
     "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784222131/IMG-20260716-WA0043_bltdvc.jpg",
-  atelierCake:
-    "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784201586/pexels-pavel-danilyuk-7180731_jjh8k6.jpg",
   showpieceCake:
     "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784201586/pexels-jonathanborba-19870076_wopfo0.jpg",
 } as const;

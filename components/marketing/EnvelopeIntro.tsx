@@ -126,21 +126,17 @@ function WaxSeal({
 
   return (
     <div className="absolute left-1/2 top-1/2 z-30 -translate-x-1/2 -translate-y-1/2">
-      <motion.div
-        className="relative h-20 w-20 sm:h-24 sm:w-24"
-        animate={
-          !cracked && !reduceMotion
-            ? { filter: ["brightness(1)", "brightness(1.35)", "brightness(1)"] }
-            : { filter: "brightness(1)" }
-        }
-        transition={
-          !cracked
-            ? { repeat: Infinity, duration: 3.6, ease: "easeInOut", repeatDelay: 1.2 }
-            : { duration: 0.3 }
-        }
-      >
+      <motion.div className="relative h-24 w-24 sm:h-28 sm:w-28">
         {/* Contact shadow */}
-        <div className="absolute inset-0 translate-y-1.5 rounded-full bg-black/35 blur-md" />
+        <div className="absolute inset-0 translate-y-2 rounded-full bg-black/40 blur-lg" />
+
+        {/* Stamped coin-edge ring, just inside the outer rim */}
+        <div
+          className="absolute inset-[5px] rounded-full opacity-80"
+          style={{
+            border: "1.5px dotted rgba(255,247,224,0.55)",
+          }}
+        />
 
         {/* Left half — "P" */}
         <motion.div
@@ -158,9 +154,9 @@ function WaxSeal({
             style={{
               borderRadius: "50% 46% 54% 48% / 48% 52% 46% 55%",
               background:
-                "radial-gradient(circle at 34% 30%, #f5e2ae 0%, #c9a15c 42%, #7d5a2c 88%, #6a4a24 100%)",
+                "radial-gradient(circle at 32% 26%, #fff6de 0%, #f5e2ae 18%, #c9a15c 46%, #8a6633 82%, #5f4320 100%)",
               boxShadow:
-                "inset 0 2px 3px rgba(255,247,224,0.6), inset 0 -3px 5px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.45)",
+                "inset 0 2px 4px rgba(255,247,224,0.7), inset 0 -4px 6px rgba(0,0,0,0.45), 0 4px 10px rgba(0,0,0,0.45)",
             }}
           />
           <div
@@ -194,9 +190,9 @@ function WaxSeal({
             style={{
               borderRadius: "46% 50% 48% 54% / 52% 48% 55% 46%",
               background:
-                "radial-gradient(circle at 66% 30%, #f5e2ae 0%, #c9a15c 42%, #7d5a2c 88%, #6a4a24 100%)",
+                "radial-gradient(circle at 68% 26%, #fff6de 0%, #f5e2ae 18%, #c9a15c 46%, #8a6633 82%, #5f4320 100%)",
               boxShadow:
-                "inset 0 2px 3px rgba(255,247,224,0.6), inset 0 -3px 5px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.45)",
+                "inset 0 2px 4px rgba(255,247,224,0.7), inset 0 -4px 6px rgba(0,0,0,0.45), 0 4px 10px rgba(0,0,0,0.45)",
             }}
           />
           <div
@@ -213,6 +209,43 @@ function WaxSeal({
             Q
           </span>
         </motion.div>
+
+        {/* Static glint — a fixed glassy highlight for permanent depth */}
+        {!cracked && (
+          <div
+            className="pointer-events-none absolute inset-0 overflow-hidden rounded-full"
+            style={{ opacity: 0.7 }}
+          >
+            <div
+              className="absolute h-4 w-2.5 rounded-full"
+              style={{
+                top: "22%",
+                left: "30%",
+                background:
+                  "radial-gradient(ellipse, rgba(255,252,240,0.9), transparent 70%)",
+                transform: "rotate(-18deg)",
+                filter: "blur(0.4px)",
+              }}
+            />
+          </div>
+        )}
+
+        {/* Moving specular sweep — a real shimmer, not just a brightness pulse */}
+        {!cracked && !reduceMotion && (
+          <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-full">
+            <motion.div
+              className="absolute -inset-y-2 w-6"
+              style={{
+                background:
+                  "linear-gradient(100deg, transparent, rgba(255,252,240,0.85), transparent)",
+                filter: "blur(1.5px)",
+              }}
+              initial={{ x: "-140%" }}
+              animate={{ x: "220%" }}
+              transition={{ repeat: Infinity, duration: 3.4, ease: "easeInOut", repeatDelay: 1.6 }}
+            />
+          </div>
+        )}
 
         {/* Snap-of-light flash right as the wax breaks */}
         {cracked && !reduceMotion && (
