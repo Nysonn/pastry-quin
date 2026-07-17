@@ -18,6 +18,8 @@ export const EVENT = {
   gatesNote: "Gates close at 2 PM",
   contactPhone: "0760856437",
   rsvpDeadline: "25th July",
+  // Shown on the invitation's final screen — edit freely.
+  websiteLabel: "Visit Our Website",
 } as const;
 
 export const HIGHLIGHTS = [
