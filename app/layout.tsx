@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {
   Cormorant_Garamond,
+  Great_Vibes,
   Inter,
   Manrope,
   Playfair_Display,
@@ -28,6 +29,12 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
+const greatVibes = Great_Vibes({
+  variable: "--font-great-vibes",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export const metadata: Metadata = {
   title: {
     default: "Pastry Quin Cake Runway — A Luxury Showcase of Cake Artistry",
@@ -45,7 +52,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${cormorant.variable} ${inter.variable} ${manrope.variable} h-full antialiased`}
+      className={`${playfair.variable} ${cormorant.variable} ${inter.variable} ${manrope.variable} ${greatVibes.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
