@@ -1,7 +1,7 @@
 // Event photography — Luxury Cake Showcase.
 export const IMAGES = {
   heroCake:
-    "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784222131/IMG-20260716-WA0043_bltdvc.jpg",
+    "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784328765/IMG-20260716-WA0047_gsggoe.jpg",
   showpieceCake:
     "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784201586/pexels-jonathanborba-19870076_wopfo0.jpg",
 } as const;
