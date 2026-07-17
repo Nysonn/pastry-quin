@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { EVENT } from "@/lib/content";
 
-const SESSION_KEY = "pq_invite_v3";
+const SESSION_KEY = "pq_invite_v4";
 
 const emptySubscribe = () => () => {};
 
@@ -18,27 +18,23 @@ function useIntroSeen() {
   );
 }
 
-type Stage = "sealed" | "opening" | "presenting" | "done";
+type Stage = "sealed" | "presenting" | "done";
 
-// Choreography lifted from the reference: tap → flap peels toward the
-// viewer (~1.35s), its dark underside sweeps the screen, and the interior
-// fades in from a soft blur (~1.9s tap-to-hero).
-const FLAP_MS = 1350;
-const PRESENT_MS = 1950;
+// Reference choreography: tap the seal → a quick dissolve (no flap, no
+// fold animation — the cover simply fades as the hero fades in beneath
+// it, settling from a soft blur) straight into the hero content.
+const CROSSFADE_S = 0.38;
 
 // Scene 0 is the hero; the final scene (website) never auto-advances.
 const LAST_SCENE = 6;
 const HOLD_MS = [3400, 2600, 2400, 2400, 2600, 2600];
 
-// Where the flap's point sits, as a fraction of cover height.
-const FLAP_TIP = 42;
-
 // Subtle noise so the paper never reads as a flat digital gradient.
 const GRAIN_URI =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E";
 
-// Tone-on-tone botanical crackle for the cover — the reference envelope
-// carries an all-over subtle leafy paper texture.
+// Dense tone-on-tone floral engraving covering the whole cover, matching
+// the reference's all-over paper texture.
 function CoverTexture({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -48,35 +44,30 @@ function CoverTexture({ className = "" }: { className?: string }) {
       preserveAspectRatio="none"
       className={className}
     >
-      <g stroke="#dff0d8" strokeWidth="1" strokeLinecap="round" opacity="0.1">
-        <path d="M20 30 C 70 80, 50 150, 110 190 C 160 222, 150 290, 200 330" />
-        <path d="M380 50 C 340 110, 360 170, 310 210 C 270 242, 280 300, 230 340" />
-        <path d="M40 660 C 80 620, 70 570, 120 540 C 165 514, 155 460, 200 430" />
-        <path d="M360 680 C 320 640, 335 580, 285 545 C 245 517, 255 465, 215 435" />
-        <path d="M0 200 C 40 230, 60 280, 40 330" />
-        <path d="M400 260 C 360 290, 340 340, 360 390" />
-        <path d="M60 100 C 90 120, 100 150, 90 185" />
-        <path d="M330 130 C 305 155, 300 190, 315 220" />
-        <path d="M100 560 C 130 545, 160 550, 180 575" />
-        <path d="M300 600 C 275 585, 245 588, 225 610" />
-      </g>
-      <g fill="#dff0d8" opacity="0.07">
-        <path d="M55 55 C 25 80, 28 130, 55 160 C 85 130, 82 80, 55 55 z" />
-        <path d="M350 80 C 380 105, 378 150, 350 180 C 322 150, 324 105, 350 80 z" />
-        <path d="M60 560 C 30 585, 32 625, 60 650 C 88 625, 88 585, 60 560 z" />
-        <path d="M340 590 C 370 615, 368 652, 340 678 C 312 652, 314 615, 340 590 z" />
-      </g>
+      <defs>
+        <pattern id="bloom" width="70" height="70" patternUnits="userSpaceOnUse">
+          <g stroke="#dff0d8" strokeWidth="0.9" opacity="0.16">
+            <circle cx="35" cy="35" r="11" />
+            <circle cx="35" cy="35" r="5" />
+            <path d="M35 24 C 40 28, 40 34, 35 35 C 30 34, 30 28, 35 24 Z" />
+            <path d="M46 35 C 42 40, 36 40, 35 35 C 36 30, 42 30, 46 35 Z" />
+            <path d="M35 46 C 30 42, 30 36, 35 35 C 40 36, 40 42, 35 46 Z" />
+            <path d="M24 35 C 28 30, 34 30, 35 35 C 34 40, 28 40, 24 35 Z" />
+          </g>
+        </pattern>
+      </defs>
+      <rect width="400" height="700" fill="url(#bloom)" />
     </svg>
   );
 }
 
-// Single gold wax seal — stays whole and rides the flap as it opens,
-// exactly as in the reference (no cracking).
+// Gold wax seal — organic poured edge, engraved ring, static and moving
+// glints, no cracking (the reference seal never splits, it just fades).
 function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
   return (
-    <div className="relative h-[5.5rem] w-[5.5rem] sm:h-24 sm:w-24">
+    <div className="relative h-32 w-32 sm:h-36 sm:w-36">
       {/* Contact shadow on the paper */}
-      <div className="absolute inset-0 translate-y-1.5 rounded-full bg-black/40 blur-md" />
+      <div className="absolute inset-0 translate-y-2 rounded-full bg-black/40 blur-md" />
 
       {/* Wax body — organic poured edge */}
       <div
@@ -86,12 +77,12 @@ function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
           background:
             "radial-gradient(circle at 34% 28%, #fff6de 0%, #f5e2ae 18%, #c9a15c 46%, #8a6633 82%, #5f4320 100%)",
           boxShadow:
-            "inset 0 2px 4px rgba(255,247,224,0.7), inset 0 -4px 6px rgba(0,0,0,0.45), 0 4px 10px rgba(0,0,0,0.45)",
+            "inset 0 3px 5px rgba(255,247,224,0.7), inset 0 -5px 8px rgba(0,0,0,0.45), 0 6px 14px rgba(0,0,0,0.45)",
         }}
       />
       {/* Engraved ring */}
       <div
-        className="absolute inset-[4px]"
+        className="absolute inset-[6px]"
         style={{
           borderRadius: "48% 52% 46% 54% / 52% 46% 55% 48%",
           border: "1px solid rgba(255,247,224,0.4)",
@@ -99,36 +90,36 @@ function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
       />
       {/* Stamped coin edge */}
       <div
-        className="absolute inset-[8px] rounded-full opacity-70"
+        className="absolute inset-[11px] rounded-full opacity-70"
         style={{ border: "1.5px dotted rgba(255,247,224,0.5)" }}
       />
       {/* Monogram */}
       <span
-        className="absolute inset-0 flex items-center justify-center font-display text-xl text-ivory/95 sm:text-2xl"
+        className="absolute inset-0 flex items-center justify-center font-display text-2xl text-ivory/95 sm:text-3xl"
         style={{ textShadow: "0 1px 1px rgba(0,0,0,0.5), 0 -1px 0 rgba(255,240,210,0.3)" }}
       >
         PQ
       </span>
       {/* Static glint */}
       <div
-        className="pointer-events-none absolute h-4 w-2.5 rounded-full opacity-70"
+        className="pointer-events-none absolute h-5 w-3 rounded-full opacity-70"
         style={{
           top: "20%",
           left: "30%",
           background: "radial-gradient(ellipse, rgba(255,252,240,0.9), transparent 70%)",
           transform: "rotate(-18deg)",
-          filter: "blur(0.4px)",
+          filter: "blur(0.5px)",
         }}
       />
       {/* Moving specular sweep */}
       {!reduceMotion && (
         <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-full">
           <motion.div
-            className="absolute -inset-y-2 w-6"
+            className="absolute -inset-y-2 w-8"
             style={{
               background:
                 "linear-gradient(100deg, transparent, rgba(255,252,240,0.8), transparent)",
-              filter: "blur(1.5px)",
+              filter: "blur(2px)",
             }}
             initial={{ x: "-140%" }}
             animate={{ x: "220%" }}
@@ -174,15 +165,6 @@ export default function EnvelopeIntro() {
   const [stage, setStage] = useState<Stage>("sealed");
   const [scene, setScene] = useState(0);
 
-  const timeouts = useRef<ReturnType<typeof setTimeout>[]>([]);
-  useEffect(() => {
-    const pending = timeouts.current;
-    return () => pending.forEach(clearTimeout);
-  }, []);
-  const later = (fn: () => void, ms: number) => {
-    timeouts.current.push(setTimeout(fn, ms));
-  };
-
   const visible = !alreadySeen && stage !== "done";
 
   useEffect(() => {
@@ -206,24 +188,15 @@ export default function EnvelopeIntro() {
     setStage("done");
   };
 
-  const open = () => {
-    if (reduceMotion) {
-      setStage("presenting");
-      return;
-    }
-    setStage("opening");
-    later(() => setStage("presenting"), PRESENT_MS);
-  };
-
   const handleOverlayClick = () => {
-    if (stage === "sealed") open();
+    if (stage === "sealed") setStage("presenting");
     else if (stage === "presenting" && scene < LAST_SCENE) {
       setScene((s) => s + 1);
     }
   };
 
-  const opening = stage === "opening";
   const presenting = stage === "presenting";
+  const crossfade = { duration: reduceMotion ? 0 : CROSSFADE_S };
 
   // The seven reveals + the website scene, paced like the reference's
   // downward scroll: script heading above, spaced capitals beneath.
@@ -329,18 +302,10 @@ export default function EnvelopeIntro() {
             initial={false}
             animate={
               stage === "sealed"
-                ? { opacity: 0, filter: "blur(10px)" }
-                : opening
-                  ? { opacity: 1, filter: "blur(10px)" }
-                  : { opacity: 1, filter: "blur(0px)" }
+                ? { opacity: 0, filter: "blur(8px)" }
+                : { opacity: 1, filter: "blur(0px)" }
             }
-            transition={
-              reduceMotion
-                ? { duration: 0 }
-                : opening
-                  ? { opacity: { delay: 0.8, duration: 0.6 } }
-                  : { filter: { duration: 0.9, ease: "easeOut" }, opacity: { duration: 0.3 } }
-            }
+            transition={crossfade}
           >
             <div
               className="absolute inset-0 opacity-[0.05] mix-blend-multiply"
@@ -380,29 +345,15 @@ export default function EnvelopeIntro() {
             </AnimatePresence>
           </motion.div>
 
-          {/* ————— Envelope cover ————— */}
+          {/* ————— Envelope cover — a single flat card, no fold animation;
+               it simply dissolves as the interior fades in beneath it ————— */}
           <AnimatePresence>
-            {(stage === "sealed" || opening) && (
+            {stage === "sealed" && (
               <motion.div
                 key="cover"
                 className="absolute inset-0 z-20"
-                style={{ perspective: 900 }}
-                animate={
-                  opening && !reduceMotion
-                    ? { opacity: 0, scale: 1.06 }
-                    : { opacity: 1, scale: 1 }
-                }
-                transition={
-                  opening
-                    ? {
-                        opacity: { delay: 1.15, duration: 0.7, ease: "easeIn" },
-                        scale: { duration: PRESENT_MS / 1000, ease: "easeIn" },
-                      }
-                    : undefined
-                }
-                exit={{ opacity: 0, transition: { duration: reduceMotion ? 0 : 0.2 } }}
+                exit={{ opacity: 0, transition: crossfade }}
               >
-                {/* Envelope body */}
                 <div
                   className="absolute inset-0"
                   style={{
@@ -415,107 +366,30 @@ export default function EnvelopeIntro() {
                     style={{ backgroundImage: `url("${GRAIN_URI}")`, backgroundSize: "160px 160px" }}
                   />
                   <CoverTexture className="absolute inset-0 h-full w-full" />
-                  {/* Side/bottom fold creases, hinted like the reference */}
+                  {/* Soft shadow in the upper corner, like the reference's cover */}
                   <div
-                    className="absolute inset-0 opacity-45"
+                    className="absolute inset-x-0 top-0 h-1/3 opacity-40"
                     style={{
                       background:
-                        "linear-gradient(to top left, transparent 49.55%, rgba(0,0,0,0.3) 50%, transparent 50.45%) bottom left / 50% 45% no-repeat, linear-gradient(to top right, transparent 49.55%, rgba(0,0,0,0.3) 50%, transparent 50.45%) bottom right / 50% 45% no-repeat",
+                        "linear-gradient(200deg, rgba(0,0,0,0.4) 0%, transparent 60%)",
                     }}
                   />
-
-                  {/* Reveal 1 — script on the cover, like the reference */}
-                  <div
-                    className="absolute inset-x-0 text-center"
-                    style={{ top: "56%" }}
-                  >
-                    <p className="font-script text-3xl text-champagne/90 sm:text-4xl">
-                      You Are
-                    </p>
-                    <p className="mt-1 font-script text-5xl text-champagne sm:text-6xl">
-                      Cordially Invited
-                    </p>
-                  </div>
                 </div>
 
-                {/* Soft shadow the flap casts on the body */}
+                {/* Seal + invitation line, grouped in the upper third —
+                    exactly where the reference places its wax seal */}
                 <div
-                  className="absolute inset-x-0 top-0"
-                  style={{
-                    height: `${FLAP_TIP + 4}%`,
-                    clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    background: "rgba(0,0,0,0.25)",
-                    filter: "blur(6px)",
-                    transform: "translateY(6px)",
-                  }}
-                />
-
-                {/* Top flap — hinges at the top edge, peels toward the viewer */}
-                <motion.div
-                  className="absolute inset-x-0 top-0"
-                  style={{
-                    height: `${FLAP_TIP}%`,
-                    transformOrigin: "50% 0%",
-                    transformStyle: "preserve-3d",
-                  }}
-                  animate={{ rotateX: opening && !reduceMotion ? -118 : 0 }}
-                  transition={{
-                    duration: FLAP_MS / 1000,
-                    ease: [0.6, 0.05, 0.3, 1],
-                  }}
+                  className="absolute inset-x-0 flex flex-col items-center px-6 text-center"
+                  style={{ top: "22%" }}
                 >
-                  {/* Outer face */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                      backfaceVisibility: "hidden",
-                      background:
-                        "linear-gradient(180deg, #1a6049 0%, #115540 55%, #0d422f 100%)",
-                    }}
-                  >
-                    <div
-                      className="absolute inset-0 opacity-[0.32] mix-blend-overlay"
-                      style={{ backgroundImage: `url("${GRAIN_URI}")`, backgroundSize: "160px 160px" }}
-                    />
-                    <CoverTexture className="absolute inset-0 h-full w-full" />
-                    <div
-                      className="absolute inset-0 opacity-40"
-                      style={{
-                        background:
-                          "linear-gradient(120deg, transparent 35%, rgba(201,161,92,0.1) 48%, transparent 62%)",
-                      }}
-                    />
-                  </div>
-                  {/* Dark underside, seen as the flap sweeps past the camera */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                      transform: "rotateX(180deg)",
-                      backfaceVisibility: "hidden",
-                      background: "linear-gradient(0deg, #07251b 0%, #041710 100%)",
-                    }}
-                  />
-                  {/* Gold wax seal at the flap's point — rides with it */}
-                  <div
-                    className="absolute left-1/2 -translate-x-1/2"
-                    style={{ bottom: "-9%", transform: "translateX(-50%) translateZ(1px)" }}
-                  >
-                    <GoldSeal reduceMotion={reduceMotion} />
-                  </div>
-                </motion.div>
-
-                {/* Darkness that swells as the flap crosses the view */}
-                {!reduceMotion && (
-                  <motion.div
-                    className="pointer-events-none absolute inset-0"
-                    style={{ background: "#041710" }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: opening ? 0.85 : 0 }}
-                    transition={{ delay: opening ? 0.4 : 0, duration: 0.7, ease: "easeIn" }}
-                  />
-                )}
+                  <GoldSeal reduceMotion={reduceMotion} />
+                  <p className="mt-6 font-script text-3xl text-champagne/90 sm:text-4xl">
+                    You Are
+                  </p>
+                  <p className="mt-1 font-script text-5xl text-champagne sm:text-6xl">
+                    Cordially Invited
+                  </p>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
