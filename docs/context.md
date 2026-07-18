@@ -71,10 +71,10 @@ plus a looping hero video (`VIDEOS.hero`):
 First visit only (sessionStorage-gated): a full-screen deep-emerald envelope
 with a gold wax seal ("PQ · Pastry Quin Presents"). Tapping the seal lifts
 the whole cover away in one motion, revealing the site directly underneath
-— no intermediate scenes or frames. All the event particulars that used to
+— no intermediate scenes or frames. The event particulars that used to
 live inside the envelope (date, time, location, RSVP deadline, contact) now
-live on the page itself, in the Event Details section and The Showcase copy.
-Respects `prefers-reduced-motion` (the lift is instant).
+live entirely in the Event Details section's photo — not duplicated as text
+elsewhere on the page. Respects `prefers-reduced-motion` (the lift is instant).
 Component: `components/marketing/EnvelopeIntro.tsx`.
 
 ### Motion
@@ -95,9 +95,7 @@ Component: `components/marketing/EnvelopeIntro.tsx`.
    `Discover More` → `#about` and `RSVP` → `#rsvp`
 3. **Event Details** (`#event-details`) — the full event-details photo
    (`IMAGES.eventDetails`), uncropped
-4. **The Showcase** (`#about`) — editorial paragraph + tilting photo, plus a
-   closing paragraph of event particulars (date, time, venue, RSVP deadline,
-   contact)
+4. **The Showcase** (`#about`) — editorial paragraph + tilting photo
 5. **Dress Code** (`#dress-code`) — "Flowy. Elegant. Effortless." + a row of
    palette swatches (`DRESS_CODE_PALETTE`), then two uncropped editorial
    photos (`DRESS_CODE_IMAGES`)

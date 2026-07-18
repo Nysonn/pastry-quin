@@ -22,13 +22,6 @@ export const EVENT = {
   tagline: "A Luxury Showcase of Cake Artistry",
   motto: "Where cake becomes the moment.",
   presenter: "Pastry Quin",
-  partnerLine: "Official Partner — Baileys",
-  venue: "Serena Hotel Kigo",
-  venueRegion: "Entebbe, Uganda",
-  saveTheDate: "3rd August 2026",
-  gatesNote: "Gates close at 2 PM",
-  contactPhone: "0760856437",
-  rsvpDeadline: "25th July",
 } as const;
 
 export const DRESS_CODE = {
