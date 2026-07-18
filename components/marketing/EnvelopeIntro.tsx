@@ -2,9 +2,8 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { EVENT } from "@/lib/content";
 
-const SESSION_KEY = "pq_invite_v4";
+const SESSION_KEY = "pq_invite_v5";
 
 const emptySubscribe = () => () => {};
 
@@ -17,19 +16,6 @@ function useIntroSeen() {
     () => true
   );
 }
-
-type Stage = "sealed" | "presenting" | "done";
-
-// Tap the seal → the cover fades and gently pulls back first; the hero
-// only starts fading in once the cover is nearly gone, so "You Are
-// Cordially Invited" never overlaps the hero's own text.
-const COVER_EXIT_S = 1.5;
-const HERO_ENTER_DELAY_S = 1.3;
-const HERO_ENTER_DURATION_S = 1.8;
-
-// Scene 0 is the cordial invite; the final scene (website) never auto-advances.
-const LAST_SCENE = 7;
-const HOLD_MS = [3400, 4200, 3400, 3200, 3200, 3400, 3400];
 
 // Subtle noise so the paper never reads as a flat digital gradient.
 const GRAIN_URI =
@@ -139,41 +125,14 @@ function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
   );
 }
 
-function ScriptLine({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <p className={`font-script text-rose-gold ${className}`}>{children}</p>
-  );
-}
-
-function CapsLine({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <p
-      className={`font-alt tracking-[0.35em] text-charcoal/85 uppercase ${className}`}
-    >
-      {children}
-    </p>
-  );
-}
-
+// Tap the seal → the whole envelope lifts away in one motion, revealing
+// the site directly underneath. No intermediate scenes.
 export default function EnvelopeIntro() {
   const reduceMotion = useReducedMotion();
   const alreadySeen = useIntroSeen();
-  const [stage, setStage] = useState<Stage>("sealed");
-  const [scene, setScene] = useState(0);
+  const [open, setOpen] = useState(false);
 
-  const visible = !alreadySeen && stage !== "done";
+  const visible = !alreadySeen && !open;
 
   useEffect(() => {
     if (!visible) return;
@@ -183,120 +142,9 @@ export default function EnvelopeIntro() {
     };
   }, [visible]);
 
-  // Auto-advance downward through the reveals, scroll-style; the website
-  // scene at the end waits for the visitor.
-  useEffect(() => {
-    if (stage !== "presenting" || scene >= LAST_SCENE) return;
-    const t = setTimeout(() => setScene((s) => s + 1), HOLD_MS[scene]);
-    return () => clearTimeout(t);
-  }, [stage, scene]);
-
-  const finish = () => {
+  const openEnvelope = () => {
     sessionStorage.setItem(SESSION_KEY, "1");
-    setStage("done");
-  };
-
-  const handleOverlayClick = () => {
-    if (stage === "sealed") setStage("presenting");
-    else if (stage === "presenting" && scene < LAST_SCENE) {
-      setScene((s) => s + 1);
-    }
-  };
-
-  const presenting = stage === "presenting";
-  const coverExit = { duration: reduceMotion ? 0 : COVER_EXIT_S, ease: [0.4, 0, 0.2, 1] as const };
-  const heroEnter = {
-    delay: reduceMotion ? 0 : HERO_ENTER_DELAY_S,
-    duration: reduceMotion ? 0 : HERO_ENTER_DURATION_S,
-    ease: [0.4, 0, 0.2, 1] as const,
-  };
-
-  // The eight reveals + the website scene, paced like the reference's
-  // downward scroll: script heading above, spaced capitals beneath.
-  const scenes: React.ReactNode[] = [
-    // Reveal 1 — You Are Cordially Invited (moved inside, off the cover)
-    <div key="s-invite" className="flex flex-col items-center">
-      <ScriptLine className="text-4xl sm:text-5xl">You Are</ScriptLine>
-      <ScriptLine className="mt-1 text-5xl sm:text-6xl">Cordially Invited</ScriptLine>
-    </div>,
-
-    // Reveal 2 — Pastry Quin Presents / THE CAKE RUNWAY (hero)
-    <div key="s0" className="flex flex-col items-center">
-      <CapsLine className="text-xs sm:text-sm">Pastry Quin Presents</CapsLine>
-      <ScriptLine className="mt-6 text-6xl sm:text-7xl">The Cake</ScriptLine>
-      <ScriptLine className="mt-2 text-6xl sm:text-7xl">Runway</ScriptLine>
-    </div>,
-
-    // Reveal 3 — Save the Date
-    <div key="s1" className="flex flex-col items-center">
-      <ScriptLine className="text-5xl sm:text-6xl">Save the Date</ScriptLine>
-      <CapsLine className="mt-7 text-base sm:text-lg">3rd August</CapsLine>
-    </div>,
-
-    // Reveal 4 — Time
-    <div key="s2" className="flex flex-col items-center">
-      <ScriptLine className="text-5xl sm:text-6xl">Time</ScriptLine>
-      <CapsLine className="mt-7 text-base sm:text-lg">Gates Close at 2 PM</CapsLine>
-    </div>,
-
-    // Reveal 5 — Location
-    <div key="s3" className="flex flex-col items-center">
-      <ScriptLine className="text-5xl sm:text-6xl">Location</ScriptLine>
-      <CapsLine className="mt-7 text-base sm:text-lg">Serena Kigo</CapsLine>
-    </div>,
-
-    // Reveal 6 — Kindly RSVP
-    <div key="s4" className="flex flex-col items-center">
-      <ScriptLine className="text-5xl sm:text-6xl">Kindly RSVP</ScriptLine>
-      <CapsLine className="mt-7 text-base sm:text-lg">By {EVENT.rsvpDeadline}</CapsLine>
-    </div>,
-
-    // Reveal 7 — Pastry Quin / contact
-    <div key="s5" className="flex flex-col items-center">
-      <ScriptLine className="text-5xl sm:text-6xl">Pastry Quin</ScriptLine>
-      <CapsLine className="mt-7 text-base sm:text-lg">{EVENT.contactPhone}</CapsLine>
-    </div>,
-
-    // Final — website section, like the reference's closing form block
-    <div key="s6" className="flex flex-col items-center">
-      <div className="h-px w-16 bg-gradient-to-r from-transparent via-gold to-transparent" />
-      <button
-        type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          finish();
-        }}
-        className="shimmer-sweep mt-8 inline-flex cursor-pointer items-center justify-center rounded-full border border-transparent bg-gold px-12 py-4 font-alt text-sm font-semibold tracking-widest text-ivory uppercase shadow-warm transition-all duration-300 hover:-translate-y-0.5 hover:bg-bronze"
-      >
-        {EVENT.websiteLabel}
-      </button>
-    </div>,
-  ];
-
-  // Scroll-style transitions: the outgoing section fully fades and glides
-  // away before the next one begins entering (mode="wait" below), so
-  // consecutive lines of text are never on screen — and never overlapping
-  // — at the same time.
-  const sectionEnter = reduceMotion
-    ? { opacity: 0 }
-    : { opacity: 0, y: 80, scale: 0.97 };
-  const sectionShow = {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: reduceMotion ? 0.25 : 1.7,
-      ease: [0.22, 0.75, 0.3, 1] as const,
-    },
-  };
-  const sectionExit = {
-    opacity: 0,
-    y: reduceMotion ? 0 : -80,
-    scale: reduceMotion ? 1 : 1.03,
-    transition: {
-      duration: reduceMotion ? 0.2 : 1.4,
-      ease: [0.5, 0, 0.75, 0.4] as const,
-    },
+    setOpen(true);
   };
 
   return (
@@ -304,133 +152,50 @@ export default function EnvelopeIntro() {
       {visible && (
         <motion.div
           key="invite-overlay"
-          className="fixed inset-0 z-50 overflow-hidden bg-charcoal"
+          className="fixed inset-0 z-50 overflow-hidden"
           exit={{
             y: "-100%",
-            transition: { duration: reduceMotion ? 0 : 1.6, ease: [0.65, 0, 0.35, 1] },
+            transition: { duration: reduceMotion ? 0 : 1.4, ease: [0.65, 0, 0.35, 1] },
           }}
-          onClick={handleOverlayClick}
+          onClick={openEnvelope}
           role="button"
           aria-label="Open the invitation"
           tabIndex={0}
           onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") handleOverlayClick();
+            if (e.key === "Enter" || e.key === " ") openEnvelope();
           }}
         >
-          {/* ————— Interior — warm cream with soft tropical washes ————— */}
-          <motion.div
+          <div
             className="absolute inset-0"
             style={{
-              background:
-                "linear-gradient(175deg, #fdfbf6 0%, #f6efe3 45%, #efe6d2 78%, #e9e2cd 100%)",
+              background: "linear-gradient(165deg, #14563f 0%, #0f4d3a 48%, #093023 100%)",
             }}
-            initial={false}
-            animate={
-              stage === "sealed"
-                ? { opacity: 0, filter: "blur(8px)", scale: reduceMotion ? 1 : 1.06 }
-                : { opacity: 1, filter: "blur(0px)", scale: 1 }
-            }
-            transition={heroEnter}
           >
             <div
-              className="absolute inset-0 opacity-[0.05] mix-blend-multiply"
+              className="absolute inset-0 opacity-[0.32] mix-blend-overlay"
               style={{ backgroundImage: `url("${GRAIN_URI}")`, backgroundSize: "160px 160px" }}
             />
-            {/* Soft tropical washes — sage, sand, champagne */}
+            <CoverTexture className="absolute inset-0 h-full w-full" />
+            {/* Soft shadow in the upper corner, like the reference's cover */}
             <div
-              className="absolute -left-16 top-[8%] h-72 w-72 rounded-full blur-3xl"
-              style={{ background: "radial-gradient(circle, rgba(183,201,173,0.4), transparent 70%)" }}
+              className="absolute inset-x-0 top-0 h-1/3 opacity-40"
+              style={{
+                background: "linear-gradient(200deg, rgba(0,0,0,0.4) 0%, transparent 60%)",
+              }}
             />
-            <div
-              className="absolute -right-20 top-[30%] h-80 w-80 rounded-full blur-3xl"
-              style={{ background: "radial-gradient(circle, rgba(226,168,147,0.26), transparent 70%)" }}
-            />
-            <div
-              className="absolute -bottom-16 -left-10 h-72 w-72 rounded-full blur-3xl"
-              style={{ background: "radial-gradient(circle, rgba(201,161,92,0.22), transparent 70%)" }}
-            />
-            <div
-              className="absolute -bottom-20 -right-12 h-80 w-80 rounded-full blur-3xl"
-              style={{ background: "radial-gradient(circle, rgba(183,201,173,0.34), transparent 70%)" }}
-            />
+          </div>
 
-            {/* Sections — mode="wait" so one fully fades out before the
-                next fades in; their text is never simultaneously visible */}
-            <AnimatePresence mode="wait">
-              {presenting && (
-                <motion.div
-                  key={scene}
-                  className="absolute inset-0 flex items-center justify-center px-6 text-center"
-                  initial={sectionEnter}
-                  animate={sectionShow}
-                  exit={sectionExit}
-                >
-                  {/* Framed card, echoing the reference's bordered stationery */}
-                  <div
-                    className="relative w-full max-w-xs rounded-2xl border border-gold/50 px-8 py-12 backdrop-blur-[2px]"
-                    style={{
-                      background: "rgba(253,251,246,0.55)",
-                      boxShadow: "0 20px 60px -20px rgba(15,77,58,0.35)",
-                    }}
-                  >
-                    <div className="pointer-events-none absolute inset-[6px] rounded-xl border border-gold/25" />
-                    <div className="relative">{scenes[scene]}</div>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
-          {/* ————— Envelope cover — a single flat card, no fold animation;
-               it simply dissolves as the interior fades in beneath it ————— */}
-          <AnimatePresence>
-            {stage === "sealed" && (
-              <motion.div
-                key="cover"
-                className="absolute inset-0 z-20"
-                exit={{
-                  opacity: 0,
-                  scale: reduceMotion ? 1 : 1.08,
-                  transition: coverExit,
-                }}
-              >
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(165deg, #14563f 0%, #0f4d3a 48%, #093023 100%)",
-                  }}
-                >
-                  <div
-                    className="absolute inset-0 opacity-[0.32] mix-blend-overlay"
-                    style={{ backgroundImage: `url("${GRAIN_URI}")`, backgroundSize: "160px 160px" }}
-                  />
-                  <CoverTexture className="absolute inset-0 h-full w-full" />
-                  {/* Soft shadow in the upper corner, like the reference's cover */}
-                  <div
-                    className="absolute inset-x-0 top-0 h-1/3 opacity-40"
-                    style={{
-                      background:
-                        "linear-gradient(200deg, rgba(0,0,0,0.4) 0%, transparent 60%)",
-                    }}
-                  />
-                </div>
-
-                {/* Seal, positioned in the upper third — exactly where
-                    the reference places its wax seal. The invitation
-                    itself now lives inside, as the first reveal. */}
-                <div
-                  className="absolute inset-x-0 flex flex-col items-center px-6 text-center"
-                  style={{ top: "26%" }}
-                >
-                  <GoldSeal reduceMotion={reduceMotion} />
-                  <p className="mt-8 font-alt text-[0.65rem] tracking-[0.35em] text-champagne/70 uppercase sm:text-xs">
-                    Tap the seal to open
-                  </p>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {/* Seal, positioned in the upper third — exactly where the
+              reference places its wax seal. */}
+          <div
+            className="absolute inset-x-0 flex flex-col items-center px-6 text-center"
+            style={{ top: "26%" }}
+          >
+            <GoldSeal reduceMotion={reduceMotion} />
+            <p className="mt-8 font-alt text-[0.65rem] tracking-[0.35em] text-champagne/70 uppercase sm:text-xs">
+              Tap the seal to open
+            </p>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

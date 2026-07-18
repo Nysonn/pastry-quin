@@ -10,7 +10,15 @@ import CountdownTimer from "@/components/marketing/CountdownTimer";
 import ScrollCue from "@/components/marketing/ScrollCue";
 import RegistrationForm from "@/components/forms/RegistrationForm";
 import { getEventSettings } from "@/lib/db/queries";
-import { DRESS_CODE, DRESS_CODE_IMAGES, EVENT, IMAGES, REASONS, VIDEOS } from "@/lib/content";
+import {
+  DRESS_CODE,
+  DRESS_CODE_IMAGES,
+  DRESS_CODE_PALETTE,
+  EVENT,
+  IMAGES,
+  REASONS,
+  VIDEOS,
+} from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
@@ -55,13 +63,16 @@ export default async function HomePage() {
               </p>
             </RevealItem>
             <RevealItem>
-              <div className="mt-10 flex justify-center md:mt-12">
+              <div className="mt-10 flex flex-col justify-center gap-4 sm:flex-row md:mt-12">
                 <CTAButton
                   href="#about"
                   variant="outline"
                   className="w-full max-w-xs border-champagne/70 bg-charcoal/25 text-ivory backdrop-blur-sm hover:bg-champagne/15 hover:text-ivory sm:w-auto"
                 >
                   Discover More
+                </CTAButton>
+                <CTAButton href="#rsvp" className="w-full max-w-xs sm:w-auto">
+                  RSVP — It&apos;s Free
                 </CTAButton>
               </div>
             </RevealItem>
@@ -70,6 +81,25 @@ export default async function HomePage() {
 
         <div className="absolute inset-x-0 bottom-8 z-10 hidden justify-center md:flex md:bottom-12">
           <ScrollCue />
+        </div>
+      </section>
+
+      {/* Event Details */}
+      <section id="event-details" className="relative scroll-mt-24 overflow-hidden bg-cream py-24">
+        <div className="relative mx-auto max-w-2xl px-6">
+          <Reveal>
+            <SectionHeading eyebrow="Save The Details" title="Everything you need to know" />
+            <div className="mt-12 overflow-hidden rounded-2xl shadow-warm-lg">
+              <Image
+                src={IMAGES.eventDetails}
+                alt="Event details — date, time, location, and RSVP information"
+                width={1200}
+                height={1500}
+                sizes="(max-width: 768px) 100vw, 700px"
+                className="h-auto w-full"
+              />
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -117,6 +147,12 @@ export default async function HomePage() {
                 From the first impression to the final bite, every detail is
                 intentional.
               </p>
+              <p>
+                Save the date for {EVENT.saveTheDate}, {EVENT.gatesNote.toLowerCase()}, at{" "}
+                {EVENT.venue}, {EVENT.venueRegion}. Kindly RSVP by{" "}
+                {EVENT.rsvpDeadline} — for questions, reach {EVENT.presenter}{" "}
+                directly on {EVENT.contactPhone}. {EVENT.partnerLine}.
+              </p>
             </div>
           </Reveal>
         </div>
@@ -139,22 +175,34 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl px-6">
           <Reveal>
             <SectionHeading eyebrow={DRESS_CODE.eyebrow} title={DRESS_CODE.title} />
-            <p className="mx-auto mt-6 max-w-2xl text-center leading-relaxed text-charcoal/75">
+            <p className="mx-auto mt-6 max-w-2xl text-center font-serif-alt text-2xl text-bronze italic">
               {DRESS_CODE.intro}
             </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-4">
+              {DRESS_CODE_PALETTE.map((color) => (
+                <span
+                  key={color.hex}
+                  title={color.name}
+                  aria-label={color.name}
+                  className="h-10 w-10 rounded-full shadow-warm ring-1 ring-charcoal/10 sm:h-12 sm:w-12"
+                  style={{ backgroundColor: color.hex }}
+                />
+              ))}
+            </div>
           </Reveal>
 
           <RevealStagger className="mx-auto mt-16 grid max-w-3xl gap-6 sm:grid-cols-2" staggerDelay={0.15}>
             {DRESS_CODE_IMAGES.map((src) => (
               <RevealItem key={src}>
                 <TiltCard>
-                  <div className="group relative aspect-[3/4] overflow-hidden rounded-2xl shadow-warm-lg">
+                  <div className="group relative overflow-hidden rounded-2xl bg-ivory shadow-warm-lg">
                     <Image
                       src={src}
                       alt="Dress code inspiration"
-                      fill
+                      width={900}
+                      height={1200}
                       sizes="(max-width: 640px) 100vw, 50vw"
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      className="h-auto w-full transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   </div>

@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const NAV = [
+  { href: "#event-details", label: "Details" },
   { href: "#about", label: "The Showcase" },
   { href: "#dress-code", label: "Dress Code" },
 ];
