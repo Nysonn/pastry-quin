@@ -10,7 +10,7 @@ import CountdownTimer from "@/components/marketing/CountdownTimer";
 import ScrollCue from "@/components/marketing/ScrollCue";
 import RegistrationForm from "@/components/forms/RegistrationForm";
 import { getEventSettings } from "@/lib/db/queries";
-import { DRESS_CODE, EVENT, IMAGES, REASONS, VIDEOS } from "@/lib/content";
+import { DRESS_CODE, DRESS_CODE_IMAGES, EVENT, IMAGES, REASONS, VIDEOS } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
@@ -144,29 +144,19 @@ export default async function HomePage() {
             </p>
           </Reveal>
 
-          <RevealStagger className="mx-auto mt-16 grid max-w-3xl gap-6 sm:grid-cols-2" staggerDelay={0.15}>
-            {DRESS_CODE.categories.map((cat, i) => (
-              <RevealItem key={cat.label} className={i === 1 ? "sm:translate-y-10" : ""}>
+          <RevealStagger className="mt-16 grid gap-6 sm:grid-cols-3" staggerDelay={0.15}>
+            {DRESS_CODE_IMAGES.map((src, i) => (
+              <RevealItem key={src} className={i === 1 ? "sm:translate-y-10" : ""}>
                 <TiltCard>
                   <div className="group relative aspect-[3/4] overflow-hidden rounded-2xl shadow-warm-lg">
-                    {/* Placeholder — real photography to follow */}
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background:
-                          "linear-gradient(155deg, rgba(183,201,173,0.5) 0%, rgba(246,239,227,0.9) 55%, rgba(226,168,147,0.45) 100%)",
-                      }}
+                    <Image
+                      src={src}
+                      alt="Dress code inspiration"
+                      fill
+                      sizes="(max-width: 640px) 100vw, 33vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
-                    <div className="absolute inset-4 rounded-xl border border-gold/30" />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center">
-                      <span className="font-serif-alt text-lg text-charcoal/50 italic">
-                        Image coming soon
-                      </span>
-                    </div>
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal/70 via-charcoal/20 to-transparent px-6 pt-14 pb-6 text-left">
-                      <p className="font-display text-xl text-ivory">{cat.label}</p>
-                      <p className="mt-1 text-sm text-ivory/80">{cat.description}</p>
-                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   </div>
                 </TiltCard>
               </RevealItem>

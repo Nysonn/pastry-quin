@@ -6,6 +6,12 @@ export const IMAGES = {
     "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784330291/IMG-20260718-WA0002_b98uzp.jpg",
 } as const;
 
+export const DRESS_CODE_IMAGES = [
+  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784355376/IMG-20260718-WA0008_ipfrfy.jpg",
+  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784355376/IMG-20260718-WA0009_jtbono.jpg",
+  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784355376/IMG-20260718-WA0010_i4utla.jpg",
+] as const;
+
 export const VIDEOS = {
   hero: "https://res.cloudinary.com/df3lhzzy7/video/upload/v1784351353/IMG_8973_adlfpo.mov",
 } as const;
@@ -31,16 +37,6 @@ export const DRESS_CODE = {
   title: "Dress the part",
   intro:
     "This is a runway, not a garden party. Think tailored silhouettes, rich jewel tones, and a touch of drama — dressing that photographs as beautifully as the cakes.",
-  categories: [
-    {
-      label: "Cocktail Chic",
-      description: "Sharp tailoring, statement fabrics, elevated separates.",
-    },
-    {
-      label: "Editorial Edge",
-      description: "Bold color, directional accessories, confident silhouettes.",
-    },
-  ],
 } as const;
 
 export const REASONS = [
