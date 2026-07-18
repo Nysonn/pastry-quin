@@ -7,8 +7,7 @@ import { Menu, X } from "lucide-react";
 
 const NAV = [
   { href: "#about", label: "The Showcase" },
-  { href: "#highlights", label: "The Evening" },
-  { href: "#gallery", label: "Gallery" },
+  { href: "#dress-code", label: "Dress Code" },
 ];
 
 export default function SiteHeader() {

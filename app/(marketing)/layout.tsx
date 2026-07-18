@@ -1,5 +1,4 @@
 import SiteHeader from "@/components/marketing/SiteHeader";
-import SiteFooter from "@/components/marketing/SiteFooter";
 import EnvelopeIntro from "@/components/marketing/EnvelopeIntro";
 
 export default function MarketingLayout({
@@ -12,7 +11,6 @@ export default function MarketingLayout({
       <EnvelopeIntro />
       <SiteHeader />
       <main className="flex-1">{children}</main>
-      <SiteFooter />
     </>
   );
 }
