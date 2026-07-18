@@ -9,7 +9,7 @@
 
 A premium **one-page** site for **Pastry Quin Cake Runway** — a **luxury showcase of cake artistry** presented by **Pastry Quin**, official partner **Baileys**.
 
-- Venue: **White Cake Residence**
+- Venue: **Serena Hotel Kigo, Entebbe**
 - Tagline: **"A Luxury Showcase of Cake Artistry"**
 - Motto: **"Where cake becomes the moment."**
 
@@ -58,17 +58,22 @@ fonts:
 
 ### Imagery
 
-Two real event photos (Cloudinary), referenced in `lib/content.ts` → `IMAGES`:
-- `heroCake` — hero + about + gallery
-- `showpieceCake` — about + gallery + RSVP backdrop
+Real event photos (Cloudinary), referenced in `lib/content.ts` → `IMAGES`,
+plus a looping hero video (`VIDEOS.hero`):
+- `heroCake` — about card + Dress Code placeholders (video is the Hero background)
+- `showpieceCake` — about + RSVP backdrop
+- `VIDEOS.hero` — looping Hero background video
 
-### Signature element — the Cloche Reveal
+### Signature element — the Envelope Intro
 
-First visit only (sessionStorage-gated): a full-screen charcoal scene with a
-golden cloche dome over a tiered cake under a warm spotlight. Tapping lifts
-the dome in 3D, sparkles rise, the title fades in, and the overlay dissolves
-into the site. Respects `prefers-reduced-motion` (skips straight in).
-Component: `components/marketing/ClocheIntro.tsx`.
+First visit only (sessionStorage-gated): a full-screen deep-emerald envelope
+with a gold wax seal ("PQ · Pastry Quin Presents"). Tapping the seal
+dissolves the cover into a warm cream interior where a sequence of framed,
+bordered reveals — the invitation line, event name, date, time, location,
+RSVP details, and contact — cross-fade in one at a time (never overlapping),
+ending on a "Visit Our Website" button that transitions into the site.
+Respects `prefers-reduced-motion` (skips straight to the final reveal).
+Component: `components/marketing/EnvelopeIntro.tsx`.
 
 ### Motion
 
@@ -82,16 +87,16 @@ Component: `components/marketing/ClocheIntro.tsx`.
 
 ## 4. One-Page Structure (`app/(marketing)/page.tsx`)
 
-1. **Cloche intro** (once per session, from the marketing layout)
-2. **Hero** — parallax full-bleed photo, title, tagline, date/venue (from `event_settings`), partner line, `RSVP — It's Free` → `#rsvp`
-3. **Countdown** to the event date
-4. **The Showcase** (`#about`) — one short editorial paragraph + tilting photo
-5. **The Evening** (`#highlights`) — six concise highlight cards (`HIGHLIGHTS` in `lib/content.ts`)
-6. **Gallery** (`#gallery`) — the three photos, staggered editorial grid
-7. **RSVP** (`#rsvp`) — four reasons + the RSVP form on a parallax backdrop; inline animated confirmation ("You're on the list")
-8. **Footer** — anchors, contact, partner credit
+1. **Envelope intro** (once per session, from the marketing layout)
+2. **Hero** — looping background video, title, tagline, `Discover More` → `#about`
+3. **The Showcase** (`#about`) — one short editorial paragraph + tilting photo
+4. **Dress Code** (`#dress-code`) — intro copy + style categories (`DRESS_CODE` in `lib/content.ts`), placeholder imagery until real photos are supplied
+5. **RSVP** (`#rsvp`) — four reasons + the RSVP form on a parallax backdrop; inline animated confirmation ("You're on the list")
+6. **Countdown** — closing section of the page, dark variant
 
-Header nav uses anchor links (The Showcase / The Evening / Gallery) + gold **RSVP** button. Mobile: sticky bottom RSVP bar.
+There is no footer; the Countdown section closes the page. Header nav uses
+anchor links (The Showcase / Dress Code) + gold **RSVP** button. Mobile:
+sticky bottom RSVP bar.
 
 **Copy rule:** always "RSVP", never "Register". Keep copy short — one line per card, one paragraph per section.
 

@@ -23,13 +23,13 @@ type Stage = "sealed" | "presenting" | "done";
 // Tap the seal → the cover fades and gently pulls back first; the hero
 // only starts fading in once the cover is nearly gone, so "You Are
 // Cordially Invited" never overlaps the hero's own text.
-const COVER_EXIT_S = 0.95;
-const HERO_ENTER_DELAY_S = 0.8;
-const HERO_ENTER_DURATION_S = 1.2;
+const COVER_EXIT_S = 1.5;
+const HERO_ENTER_DELAY_S = 1.3;
+const HERO_ENTER_DURATION_S = 1.8;
 
-// Scene 0 is the hero; the final scene (website) never auto-advances.
-const LAST_SCENE = 6;
-const HOLD_MS = [3400, 2600, 2400, 2400, 2600, 2600];
+// Scene 0 is the cordial invite; the final scene (website) never auto-advances.
+const LAST_SCENE = 7;
+const HOLD_MS = [3400, 4200, 3400, 3200, 3200, 3400, 3400];
 
 // Subtle noise so the paper never reads as a flat digital gradient.
 const GRAIN_URI =
@@ -95,13 +95,19 @@ function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
         className="absolute inset-[11px] rounded-full opacity-70"
         style={{ border: "1.5px dotted rgba(255,247,224,0.5)" }}
       />
-      {/* Monogram */}
-      <span
-        className="absolute inset-0 flex items-center justify-center font-display text-2xl text-ivory/95 sm:text-3xl"
+      {/* Monogram + presenter line */}
+      <div
+        className="absolute inset-0 flex flex-col items-center justify-center gap-0.5"
         style={{ textShadow: "0 1px 1px rgba(0,0,0,0.5), 0 -1px 0 rgba(255,240,210,0.3)" }}
       >
-        PQ
-      </span>
+        <span className="font-display text-xl text-ivory/95 sm:text-2xl">PQ</span>
+        <span className="font-alt text-[0.4rem] leading-tight tracking-[0.14em] text-ivory/85 uppercase sm:text-[0.45rem]">
+          Pastry Quin
+        </span>
+        <span className="font-alt text-[0.4rem] leading-tight tracking-[0.14em] text-ivory/85 uppercase sm:text-[0.45rem]">
+          Presents
+        </span>
+      </div>
       {/* Static glint */}
       <div
         className="pointer-events-none absolute h-5 w-3 rounded-full opacity-70"
@@ -125,7 +131,7 @@ function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
             }}
             initial={{ x: "-140%" }}
             animate={{ x: "220%" }}
-            transition={{ repeat: Infinity, duration: 3.4, ease: "easeInOut", repeatDelay: 1.8 }}
+            transition={{ repeat: Infinity, duration: 4.6, ease: "easeInOut", repeatDelay: 2.2 }}
           />
         </div>
       )}
@@ -205,9 +211,15 @@ export default function EnvelopeIntro() {
     ease: [0.4, 0, 0.2, 1] as const,
   };
 
-  // The seven reveals + the website scene, paced like the reference's
+  // The eight reveals + the website scene, paced like the reference's
   // downward scroll: script heading above, spaced capitals beneath.
   const scenes: React.ReactNode[] = [
+    // Reveal 1 — You Are Cordially Invited (moved inside, off the cover)
+    <div key="s-invite" className="flex flex-col items-center">
+      <ScriptLine className="text-4xl sm:text-5xl">You Are</ScriptLine>
+      <ScriptLine className="mt-1 text-5xl sm:text-6xl">Cordially Invited</ScriptLine>
+    </div>,
+
     // Reveal 2 — Pastry Quin Presents / THE CAKE RUNWAY (hero)
     <div key="s0" className="flex flex-col items-center">
       <CapsLine className="text-xs sm:text-sm">Pastry Quin Presents</CapsLine>
@@ -273,7 +285,7 @@ export default function EnvelopeIntro() {
     y: 0,
     scale: 1,
     transition: {
-      duration: reduceMotion ? 0.25 : 1.2,
+      duration: reduceMotion ? 0.25 : 1.7,
       ease: [0.22, 0.75, 0.3, 1] as const,
     },
   };
@@ -282,7 +294,7 @@ export default function EnvelopeIntro() {
     y: reduceMotion ? 0 : -80,
     scale: reduceMotion ? 1 : 1.03,
     transition: {
-      duration: reduceMotion ? 0.2 : 1,
+      duration: reduceMotion ? 0.2 : 1.4,
       ease: [0.5, 0, 0.75, 0.4] as const,
     },
   };
@@ -295,7 +307,7 @@ export default function EnvelopeIntro() {
           className="fixed inset-0 z-50 overflow-hidden bg-charcoal"
           exit={{
             y: "-100%",
-            transition: { duration: reduceMotion ? 0 : 1.15, ease: [0.65, 0, 0.35, 1] },
+            transition: { duration: reduceMotion ? 0 : 1.6, ease: [0.65, 0, 0.35, 1] },
           }}
           onClick={handleOverlayClick}
           role="button"
@@ -348,12 +360,22 @@ export default function EnvelopeIntro() {
               {presenting && (
                 <motion.div
                   key={scene}
-                  className="absolute inset-0 flex items-center justify-center px-8 text-center"
+                  className="absolute inset-0 flex items-center justify-center px-6 text-center"
                   initial={sectionEnter}
                   animate={sectionShow}
                   exit={sectionExit}
                 >
-                  {scenes[scene]}
+                  {/* Framed card, echoing the reference's bordered stationery */}
+                  <div
+                    className="relative w-full max-w-xs rounded-2xl border border-gold/50 px-8 py-12 backdrop-blur-[2px]"
+                    style={{
+                      background: "rgba(253,251,246,0.55)",
+                      boxShadow: "0 20px 60px -20px rgba(15,77,58,0.35)",
+                    }}
+                  >
+                    <div className="pointer-events-none absolute inset-[6px] rounded-xl border border-gold/25" />
+                    <div className="relative">{scenes[scene]}</div>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -394,18 +416,16 @@ export default function EnvelopeIntro() {
                   />
                 </div>
 
-                {/* Seal + invitation line, grouped in the upper third —
-                    exactly where the reference places its wax seal */}
+                {/* Seal, positioned in the upper third — exactly where
+                    the reference places its wax seal. The invitation
+                    itself now lives inside, as the first reveal. */}
                 <div
                   className="absolute inset-x-0 flex flex-col items-center px-6 text-center"
-                  style={{ top: "22%" }}
+                  style={{ top: "26%" }}
                 >
                   <GoldSeal reduceMotion={reduceMotion} />
-                  <p className="mt-6 font-script text-3xl text-champagne/90 sm:text-4xl">
-                    You Are
-                  </p>
-                  <p className="mt-1 font-script text-5xl text-champagne sm:text-6xl">
-                    Cordially Invited
+                  <p className="mt-8 font-alt text-[0.65rem] tracking-[0.35em] text-champagne/70 uppercase sm:text-xs">
+                    Tap the seal to open
                   </p>
                 </div>
               </motion.div>

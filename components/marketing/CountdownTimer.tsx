@@ -39,13 +39,21 @@ function RollingNumber({ value }: { value: number }) {
   );
 }
 
-export default function CountdownTimer({ targetIso }: { targetIso: string }) {
+export default function CountdownTimer({
+  targetIso,
+  variant = "light",
+}: {
+  targetIso: string;
+  variant?: "light" | "dark";
+}) {
   const target = new Date(targetIso).getTime();
   const now = useNow();
+  const numberColor = variant === "dark" ? "text-ivory" : "text-charcoal";
+  const labelColor = variant === "dark" ? "text-champagne" : "text-bronze";
 
   if (now !== null && target - now <= 0) {
     return (
-      <p className="text-center font-serif-alt text-2xl text-bronze italic">
+      <p className={`text-center font-serif-alt text-2xl italic ${labelColor}`}>
         The runway moment has arrived.
       </p>
     );
@@ -69,10 +77,10 @@ export default function CountdownTimer({ targetIso }: { targetIso: string }) {
             </span>
           )}
           <div className="text-center">
-            <div className="font-display text-4xl text-charcoal tabular-nums sm:text-6xl">
+            <div className={`font-display text-4xl tabular-nums sm:text-6xl ${numberColor}`}>
               <RollingNumber value={unit.value} />
             </div>
-            <p className="mt-2 font-alt text-[0.65rem] tracking-[0.3em] text-bronze uppercase sm:text-xs">
+            <p className={`mt-2 font-alt text-[0.65rem] tracking-[0.3em] uppercase sm:text-xs ${labelColor}`}>
               {unit.label}
             </p>
           </div>

@@ -6,6 +6,16 @@ export const IMAGES = {
     "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784330291/IMG-20260718-WA0002_b98uzp.jpg",
 } as const;
 
+export const DRESS_CODE_IMAGES = [
+  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784355376/IMG-20260718-WA0008_ipfrfy.jpg",
+  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784355376/IMG-20260718-WA0009_jtbono.jpg",
+  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784355376/IMG-20260718-WA0010_i4utla.jpg",
+] as const;
+
+export const VIDEOS = {
+  hero: "https://res.cloudinary.com/df3lhzzy7/video/upload/v1784351353/IMG_8973_adlfpo.mov",
+} as const;
+
 export const EVENT = {
   name: "Pastry Quin Cake Runway",
   tagline: "A Luxury Showcase of Cake Artistry",
@@ -22,32 +32,12 @@ export const EVENT = {
   websiteLabel: "Visit Our Website",
 } as const;
 
-export const HIGHLIGHTS = [
-  {
-    title: "The Cake Runway",
-    description: "Couture cakes presented like fashion pieces.",
-  },
-  {
-    title: "Sculptural Installations",
-    description: "Large-scale showpieces staged through the venue.",
-  },
-  {
-    title: "Live Artistry",
-    description: "Piped, sculpted and finished live, by hand.",
-  },
-  {
-    title: "Curated Tastings",
-    description: "Refined desserts and patisserie, station by station.",
-  },
-  {
-    title: "The Baileys Lounge",
-    description: "Signature serves and cake pairings by our partner.",
-  },
-  {
-    title: "Editorial Moments",
-    description: "Styled sets designed to be photographed.",
-  },
-] as const;
+export const DRESS_CODE = {
+  eyebrow: "What To Wear",
+  title: "Dress the part",
+  intro:
+    "This is a runway, not a garden party. Think tailored silhouettes, rich jewel tones, and a touch of drama — dressing that photographs as beautifully as the cakes.",
+} as const;
 
 export const REASONS = [
   "Couture cakes, one artist's vision",
