@@ -60,19 +60,21 @@ fonts:
 
 Real event photos (Cloudinary), referenced in `lib/content.ts` → `IMAGES`,
 plus a looping hero video (`VIDEOS.hero`):
-- `heroCake` — about card + Dress Code placeholders (video is the Hero background)
+- `heroCake` — unused hero fallback photo (video is the Hero background)
 - `showpieceCake` — about + RSVP backdrop
+- `eventDetails` — full event-details card, shown in its own section
+- `DRESS_CODE_IMAGES` — the two Dress Code editorial photos
 - `VIDEOS.hero` — looping Hero background video
 
 ### Signature element — the Envelope Intro
 
 First visit only (sessionStorage-gated): a full-screen deep-emerald envelope
-with a gold wax seal ("PQ · Pastry Quin Presents"). Tapping the seal
-dissolves the cover into a warm cream interior where a sequence of framed,
-bordered reveals — the invitation line, event name, date, time, location,
-RSVP details, and contact — cross-fade in one at a time (never overlapping),
-ending on a "Visit Our Website" button that transitions into the site.
-Respects `prefers-reduced-motion` (skips straight to the final reveal).
+with a gold wax seal ("PQ · Pastry Quin Presents"). Tapping the seal lifts
+the whole cover away in one motion, revealing the site directly underneath
+— no intermediate scenes or frames. All the event particulars that used to
+live inside the envelope (date, time, location, RSVP deadline, contact) now
+live on the page itself, in the Event Details section and The Showcase copy.
+Respects `prefers-reduced-motion` (the lift is instant).
 Component: `components/marketing/EnvelopeIntro.tsx`.
 
 ### Motion
@@ -87,16 +89,24 @@ Component: `components/marketing/EnvelopeIntro.tsx`.
 
 ## 4. One-Page Structure (`app/(marketing)/page.tsx`)
 
-1. **Envelope intro** (once per session, from the marketing layout)
-2. **Hero** — looping background video, title, tagline, `Discover More` → `#about`
-3. **The Showcase** (`#about`) — one short editorial paragraph + tilting photo
-4. **Dress Code** (`#dress-code`) — intro copy + style categories (`DRESS_CODE` in `lib/content.ts`), placeholder imagery until real photos are supplied
-5. **RSVP** (`#rsvp`) — four reasons + the RSVP form on a parallax backdrop; inline animated confirmation ("You're on the list")
-6. **Countdown** — closing section of the page, dark variant
+1. **Envelope intro** (once per session, from the marketing layout) — tap the
+   seal, lift away, land directly on the site below
+2. **Hero** — looping background video, staggered title/tagline reveal,
+   `Discover More` → `#about` and `RSVP` → `#rsvp`
+3. **Event Details** (`#event-details`) — the full event-details photo
+   (`IMAGES.eventDetails`), uncropped
+4. **The Showcase** (`#about`) — editorial paragraph + tilting photo, plus a
+   closing paragraph of event particulars (date, time, venue, RSVP deadline,
+   contact)
+5. **Dress Code** (`#dress-code`) — "Flowy. Elegant. Effortless." + a row of
+   palette swatches (`DRESS_CODE_PALETTE`), then two uncropped editorial
+   photos (`DRESS_CODE_IMAGES`)
+6. **RSVP** (`#rsvp`) — four reasons + the RSVP form on a parallax backdrop; inline animated confirmation ("You're on the list")
+7. **Countdown** — closing section of the page, dark variant
 
 There is no footer; the Countdown section closes the page. Header nav uses
-anchor links (The Showcase / Dress Code) + gold **RSVP** button. Mobile:
-sticky bottom RSVP bar.
+anchor links (Details / The Showcase / Dress Code) + gold **RSVP** button.
+Mobile: sticky bottom RSVP bar.
 
 **Copy rule:** always "RSVP", never "Register". Keep copy short — one line per card, one paragraph per section.
 
