@@ -7,9 +7,8 @@ export const IMAGES = {
 } as const;
 
 export const DRESS_CODE_IMAGES = [
-  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784355376/IMG-20260718-WA0008_ipfrfy.jpg",
-  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784355376/IMG-20260718-WA0009_jtbono.jpg",
-  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784355376/IMG-20260718-WA0010_i4utla.jpg",
+  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784357399/IMG_9021_i8d4ko.png",
+  "https://res.cloudinary.com/df3lhzzy7/image/upload/v1784357399/IMG_9022_epts6y.png",
 ] as const;
 
 export const VIDEOS = {
