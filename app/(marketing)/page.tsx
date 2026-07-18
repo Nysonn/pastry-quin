@@ -147,12 +147,6 @@ export default async function HomePage() {
                 From the first impression to the final bite, every detail is
                 intentional.
               </p>
-              <p>
-                Save the date for {EVENT.saveTheDate}, {EVENT.gatesNote.toLowerCase()}, at{" "}
-                {EVENT.venue}, {EVENT.venueRegion}. Kindly RSVP by{" "}
-                {EVENT.rsvpDeadline} — for questions, reach {EVENT.presenter}{" "}
-                directly on {EVENT.contactPhone}. {EVENT.partnerLine}.
-              </p>
             </div>
           </Reveal>
         </div>
