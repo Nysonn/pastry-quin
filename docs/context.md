@@ -94,12 +94,12 @@ Component: `components/marketing/EnvelopeIntro.tsx`.
 2. **Hero** — looping background video, staggered title/tagline reveal,
    `Discover More` → `#about` and `RSVP` → `#rsvp`
 3. **The Showcase** (`#about`) — editorial paragraph + tilting photo
-4. **Event Details** (`#event-details`) — designed copy + RSVP CTA on the
-   left (desktop), the full event-details photo (`IMAGES.eventDetails`,
-   uncropped) on the right
-5. **Dress Code** (`#dress-code`) — "Flowy. Elegant. Effortless." + a row of
-   palette swatches (`DRESS_CODE_PALETTE`), then two uncropped editorial
-   photos (`DRESS_CODE_IMAGES`)
+4. **Event Details** (`#event-details`) — just the heading "Every detail you
+   need" and the full event-details photo (`IMAGES.eventDetails`, uncropped)
+   below it
+5. **Dress Code** (`#dress-code`) — eyebrow "What To Wear?" + "Flowy.
+   Elegant. Effortless." + a row of palette swatches (`DRESS_CODE_PALETTE`),
+   then two uncropped editorial photos (`DRESS_CODE_IMAGES`)
 6. **RSVP** (`#rsvp`) — four reasons + the RSVP form on a parallax backdrop; inline animated confirmation ("You're on the list")
 7. **Countdown** — closing section of the page, dark variant
 

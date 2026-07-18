@@ -145,32 +145,19 @@ export default async function HomePage() {
           className="pointer-events-none absolute -bottom-16 -right-16 h-80 w-80 rounded-full blur-3xl"
           style={{ background: "radial-gradient(circle, rgba(226,168,147,0.28), transparent 70%)" }}
         />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
+        <div className="relative mx-auto max-w-2xl px-6 text-center">
           <Reveal>
-            <SectionHeading
-              align="left"
-              eyebrow="Save The Details"
-              title="Everything you need to know"
-            />
-            <div className="mt-8 space-y-5 leading-relaxed text-charcoal/75">
-              <p className="font-serif-alt text-xl text-charcoal italic">
-                Every detail you need — date, time, venue, and RSVP — is
-                right here on the card.
-              </p>
-            </div>
-            <div className="mt-10">
-              <CTAButton href="#rsvp">Reserve Your Place</CTAButton>
-            </div>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <TiltCard>
+            <h2 className="font-display text-4xl leading-tight text-charcoal md:text-5xl">
+              Every detail you need
+            </h2>
+            <TiltCard className="mt-12 block">
               <div className="overflow-hidden rounded-2xl shadow-warm-lg">
                 <Image
                   src={IMAGES.eventDetails}
                   alt="Event details — date, time, location, and RSVP information"
                   width={1200}
                   height={1500}
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 100vw, 700px"
                   className="h-auto w-full"
                 />
               </div>
@@ -195,7 +182,7 @@ export default async function HomePage() {
         />
         <div className="relative mx-auto max-w-7xl px-6">
           <Reveal>
-            <SectionHeading eyebrow={DRESS_CODE.eyebrow} title={DRESS_CODE.title} />
+            <p className="eyebrow text-center">{DRESS_CODE.eyebrow}</p>
             <p className="mx-auto mt-6 max-w-2xl text-center font-serif-alt text-2xl text-bronze italic">
               {DRESS_CODE.intro}
             </p>

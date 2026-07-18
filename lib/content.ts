@@ -25,8 +25,7 @@ export const EVENT = {
 } as const;
 
 export const DRESS_CODE = {
-  eyebrow: "What To Wear",
-  title: "Dress the part",
+  eyebrow: "What To Wear?",
   intro: "Flowy. Elegant. Effortless.",
 } as const;
 
