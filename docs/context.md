@@ -93,9 +93,10 @@ Component: `components/marketing/EnvelopeIntro.tsx`.
    seal, lift away, land directly on the site below
 2. **Hero** — looping background video, staggered title/tagline reveal,
    `Discover More` → `#about` and `RSVP` → `#rsvp`
-3. **Event Details** (`#event-details`) — the full event-details photo
-   (`IMAGES.eventDetails`), uncropped
-4. **The Showcase** (`#about`) — editorial paragraph + tilting photo
+3. **The Showcase** (`#about`) — editorial paragraph + tilting photo
+4. **Event Details** (`#event-details`) — designed copy + RSVP CTA on the
+   left (desktop), the full event-details photo (`IMAGES.eventDetails`,
+   uncropped) on the right
 5. **Dress Code** (`#dress-code`) — "Flowy. Elegant. Effortless." + a row of
    palette swatches (`DRESS_CODE_PALETTE`), then two uncropped editorial
    photos (`DRESS_CODE_IMAGES`)
@@ -103,7 +104,7 @@ Component: `components/marketing/EnvelopeIntro.tsx`.
 7. **Countdown** — closing section of the page, dark variant
 
 There is no footer; the Countdown section closes the page. Header nav uses
-anchor links (Details / The Showcase / Dress Code) + gold **RSVP** button.
+anchor links (The Showcase / Details / Dress Code) + gold **RSVP** button.
 Mobile: sticky bottom RSVP bar.
 
 **Copy rule:** always "RSVP", never "Register". Keep copy short — one line per card, one paragraph per section.

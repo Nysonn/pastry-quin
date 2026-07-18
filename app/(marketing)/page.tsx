@@ -84,59 +84,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Event Details */}
-      <section id="event-details" className="relative scroll-mt-24 overflow-hidden bg-cream py-24">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(183,201,173,0.28), transparent 70%)" }}
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-16 -right-16 h-80 w-80 rounded-full blur-3xl"
-          style={{ background: "radial-gradient(circle, rgba(226,168,147,0.28), transparent 70%)" }}
-        />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
-          <Reveal>
-            <SectionHeading
-              align="left"
-              eyebrow="Save The Details"
-              title="Everything you need to know"
-            />
-            <div className="mt-8 space-y-5 leading-relaxed text-charcoal/75">
-              <p>
-                One evening, one address, one moment worth marking on your
-                calendar —{" "}
-                <em className="font-serif-alt text-lg text-bronze">
-                  save it, share it, don&apos;t miss it.
-                </em>
-              </p>
-              <p className="font-serif-alt text-xl text-charcoal italic">
-                Every detail you need — date, time, venue, and RSVP — is
-                right here on the card.
-              </p>
-            </div>
-            <div className="mt-10">
-              <CTAButton href="#rsvp">Reserve Your Place</CTAButton>
-            </div>
-          </Reveal>
-          <Reveal delay={0.15}>
-            <TiltCard>
-              <div className="overflow-hidden rounded-2xl shadow-warm-lg">
-                <Image
-                  src={IMAGES.eventDetails}
-                  alt="Event details — date, time, location, and RSVP information"
-                  width={1200}
-                  height={1500}
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="h-auto w-full"
-                />
-              </div>
-            </TiltCard>
-          </Reveal>
-        </div>
-      </section>
-
       {/* About */}
       <section id="about" className="relative scroll-mt-24 overflow-hidden py-24">
         <div
@@ -182,6 +129,52 @@ export default async function HomePage() {
                 intentional.
               </p>
             </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Event Details */}
+      <section id="event-details" className="relative scroll-mt-24 overflow-hidden bg-cream py-24">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-20 top-10 h-72 w-72 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(183,201,173,0.28), transparent 70%)" }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-16 -right-16 h-80 w-80 rounded-full blur-3xl"
+          style={{ background: "radial-gradient(circle, rgba(226,168,147,0.28), transparent 70%)" }}
+        />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2">
+          <Reveal>
+            <SectionHeading
+              align="left"
+              eyebrow="Save The Details"
+              title="Everything you need to know"
+            />
+            <div className="mt-8 space-y-5 leading-relaxed text-charcoal/75">
+              <p className="font-serif-alt text-xl text-charcoal italic">
+                Every detail you need — date, time, venue, and RSVP — is
+                right here on the card.
+              </p>
+            </div>
+            <div className="mt-10">
+              <CTAButton href="#rsvp">Reserve Your Place</CTAButton>
+            </div>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <TiltCard>
+              <div className="overflow-hidden rounded-2xl shadow-warm-lg">
+                <Image
+                  src={IMAGES.eventDetails}
+                  alt="Event details — date, time, location, and RSVP information"
+                  width={1200}
+                  height={1500}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="h-auto w-full"
+                />
+              </div>
+            </TiltCard>
           </Reveal>
         </div>
       </section>
