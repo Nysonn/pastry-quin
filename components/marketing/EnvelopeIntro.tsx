@@ -3,7 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
-const SESSION_KEY = "pq_invite_v5";
+const SESSION_KEY = "pq_invite_v6";
 
 const emptySubscribe = () => () => {};
 
@@ -21,8 +21,8 @@ function useIntroSeen() {
 const GRAIN_URI =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E";
 
-// Dense tone-on-tone floral engraving covering the whole cover, matching
-// the reference's all-over paper texture.
+// Sage-green botanical toile — chrysanthemum blooms trailing into vines —
+// covering the whole cream cover, matching the reference invitation card.
 function CoverTexture({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -33,29 +33,46 @@ function CoverTexture({ className = "" }: { className?: string }) {
       className={className}
     >
       <defs>
-        <pattern id="bloom" width="70" height="70" patternUnits="userSpaceOnUse">
-          <g stroke="#dff0d8" strokeWidth="0.9" opacity="0.16">
-            <circle cx="35" cy="35" r="11" />
-            <circle cx="35" cy="35" r="5" />
-            <path d="M35 24 C 40 28, 40 34, 35 35 C 30 34, 30 28, 35 24 Z" />
-            <path d="M46 35 C 42 40, 36 40, 35 35 C 36 30, 42 30, 46 35 Z" />
-            <path d="M35 46 C 30 42, 30 36, 35 35 C 40 36, 40 42, 35 46 Z" />
-            <path d="M24 35 C 28 30, 34 30, 35 35 C 34 40, 28 40, 24 35 Z" />
+        <pattern id="toile" width="110" height="110" patternUnits="userSpaceOnUse">
+          <g stroke="#6f8354" strokeWidth="1.3" opacity="0.55" fill="none" strokeLinecap="round">
+            {/* Central chrysanthemum bloom */}
+            <circle cx="55" cy="55" r="16" />
+            <circle cx="55" cy="55" r="8" />
+            <path d="M55 39 C 62 45, 62 55, 55 56 C 48 55, 48 45, 55 39 Z" />
+            <path d="M71 55 C 65 62, 55 62, 55 55 C 55 48, 65 48, 71 55 Z" />
+            <path d="M55 71 C 48 65, 48 55, 55 55 C 62 55, 62 65, 55 71 Z" />
+            <path d="M39 55 C 45 48, 55 48, 55 55 C 55 62, 45 62, 39 55 Z" />
+            <path d="M43 43 C 49 46, 51 52, 47 55 C 43 52, 41 46, 43 43 Z" />
+            <path d="M67 43 C 61 46, 59 52, 63 55 C 67 52, 69 46, 67 43 Z" />
+            <path d="M67 67 C 61 64, 59 58, 63 55 C 67 58, 69 64, 67 67 Z" />
+            <path d="M43 67 C 49 64, 51 58, 47 55 C 43 58, 41 64, 43 67 Z" />
+            {/* Trailing vines and leaves toward the tile edges */}
+            <path d="M55 39 C 40 25, 20 20, 5 28" />
+            <path d="M20 30 C 15 22, 18 14, 26 10" />
+            <path d="M71 55 C 88 46, 100 46, 108 38" />
+            <path d="M95 40 C 100 32, 100 24, 94 18" />
+            <path d="M55 71 C 46 88, 46 100, 38 108" />
+            <path d="M40 95 C 32 100, 24 100, 18 94" />
+            <path d="M39 55 C 22 64, 10 64, 2 72" />
+            <path d="M10 95 C 5 88, 5 80, 10 74" />
+            {/* Small accent bud at the tile corner */}
+            <circle cx="0" cy="0" r="4" />
+            <path d="M0 0 C -6 -4, -10 -10, -8 -18" />
           </g>
         </pattern>
       </defs>
-      <rect width="400" height="700" fill="url(#bloom)" />
+      <rect width="400" height="700" fill="url(#toile)" />
     </svg>
   );
 }
 
-// Gold wax seal — organic poured edge, engraved ring, static and moving
-// glints, no cracking (the reference seal never splits, it just fades).
-function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
+// Terracotta wax seal — organic poured edge, engraved ring, static and
+// moving glints, matching the reference's single-monogram seal.
+function WaxSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
   return (
-    <div className="relative h-32 w-32 sm:h-36 sm:w-36">
+    <div className="relative h-28 w-28 sm:h-32 sm:w-32">
       {/* Contact shadow on the paper */}
-      <div className="absolute inset-0 translate-y-2 rounded-full bg-black/40 blur-md" />
+      <div className="absolute inset-0 translate-y-2 rounded-full bg-black/25 blur-md" />
 
       {/* Wax body — organic poured edge */}
       <div
@@ -63,9 +80,9 @@ function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
         style={{
           borderRadius: "48% 52% 46% 54% / 52% 46% 55% 48%",
           background:
-            "radial-gradient(circle at 34% 28%, #fff6de 0%, #f5e2ae 18%, #c9a15c 46%, #8a6633 82%, #5f4320 100%)",
+            "radial-gradient(circle at 34% 28%, #f0a273 0%, #e2794a 18%, #c85830 46%, #9c3f22 82%, #6e2c16 100%)",
           boxShadow:
-            "inset 0 3px 5px rgba(255,247,224,0.7), inset 0 -5px 8px rgba(0,0,0,0.45), 0 6px 14px rgba(0,0,0,0.45)",
+            "inset 0 3px 5px rgba(255,220,190,0.55), inset 0 -5px 8px rgba(0,0,0,0.4), 0 6px 14px rgba(0,0,0,0.35)",
         }}
       />
       {/* Engraved ring */}
@@ -73,26 +90,20 @@ function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
         className="absolute inset-[6px]"
         style={{
           borderRadius: "48% 52% 46% 54% / 52% 46% 55% 48%",
-          border: "1px solid rgba(255,247,224,0.4)",
+          border: "1px solid rgba(255,235,215,0.35)",
         }}
       />
       {/* Stamped coin edge */}
       <div
         className="absolute inset-[11px] rounded-full opacity-70"
-        style={{ border: "1.5px dotted rgba(255,247,224,0.5)" }}
+        style={{ border: "1.5px dotted rgba(255,235,215,0.45)" }}
       />
-      {/* Monogram + presenter line */}
+      {/* Monogram */}
       <div
-        className="absolute inset-0 flex flex-col items-center justify-center gap-0.5"
-        style={{ textShadow: "0 1px 1px rgba(0,0,0,0.5), 0 -1px 0 rgba(255,240,210,0.3)" }}
+        className="absolute inset-0 flex items-center justify-center"
+        style={{ textShadow: "0 1px 1px rgba(0,0,0,0.45), 0 -1px 0 rgba(255,235,215,0.25)" }}
       >
-        <span className="font-display text-xl text-ivory/95 sm:text-2xl">PQ</span>
-        <span className="font-alt text-[0.4rem] leading-tight tracking-[0.14em] text-ivory/85 uppercase sm:text-[0.45rem]">
-          Pastry Quin
-        </span>
-        <span className="font-alt text-[0.4rem] leading-tight tracking-[0.14em] text-ivory/85 uppercase sm:text-[0.45rem]">
-          Presents
-        </span>
+        <span className="font-script text-3xl text-ivory/95 sm:text-4xl">PQ</span>
       </div>
       {/* Static glint */}
       <div
@@ -100,7 +111,7 @@ function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
         style={{
           top: "20%",
           left: "30%",
-          background: "radial-gradient(ellipse, rgba(255,252,240,0.9), transparent 70%)",
+          background: "radial-gradient(ellipse, rgba(255,240,225,0.9), transparent 70%)",
           transform: "rotate(-18deg)",
           filter: "blur(0.5px)",
         }}
@@ -112,7 +123,7 @@ function GoldSeal({ reduceMotion }: { reduceMotion: boolean | null }) {
             className="absolute -inset-y-2 w-8"
             style={{
               background:
-                "linear-gradient(100deg, transparent, rgba(255,252,240,0.8), transparent)",
+                "linear-gradient(100deg, transparent, rgba(255,240,225,0.75), transparent)",
               filter: "blur(2px)",
             }}
             initial={{ x: "-140%" }}
@@ -168,32 +179,31 @@ export default function EnvelopeIntro() {
           <div
             className="absolute inset-0"
             style={{
-              background: "linear-gradient(165deg, #14563f 0%, #0f4d3a 48%, #093023 100%)",
+              background:
+                "linear-gradient(175deg, #f7f2e2 0%, #f1ead4 45%, #ece2c5 78%, #e7dcbc 100%)",
             }}
           >
             <div
-              className="absolute inset-0 opacity-[0.32] mix-blend-overlay"
+              className="absolute inset-0 opacity-[0.05] mix-blend-multiply"
               style={{ backgroundImage: `url("${GRAIN_URI}")`, backgroundSize: "160px 160px" }}
             />
             <CoverTexture className="absolute inset-0 h-full w-full" />
-            {/* Soft shadow in the upper corner, like the reference's cover */}
-            <div
-              className="absolute inset-x-0 top-0 h-1/3 opacity-40"
-              style={{
-                background: "linear-gradient(200deg, rgba(0,0,0,0.4) 0%, transparent 60%)",
-              }}
-            />
           </div>
 
-          {/* Seal, positioned in the upper third — exactly where the
-              reference places its wax seal. */}
+          {/* Seal + invitation text, positioned like the reference card. */}
           <div
             className="absolute inset-x-0 flex flex-col items-center px-6 text-center"
-            style={{ top: "26%" }}
+            style={{ top: "34%" }}
           >
-            <GoldSeal reduceMotion={reduceMotion} />
-            <p className="mt-8 font-alt text-[0.65rem] tracking-[0.35em] text-champagne/70 uppercase sm:text-xs">
-              Tap the seal to open
+            <WaxSeal reduceMotion={reduceMotion} />
+            <p className="mt-8 font-script text-3xl leading-tight text-charcoal sm:text-4xl">
+              You Are
+            </p>
+            <p className="font-script text-4xl leading-tight text-charcoal sm:text-5xl">
+              Cordially Invited
+            </p>
+            <p className="mt-6 font-alt text-[0.65rem] tracking-[0.35em] text-bronze/80 uppercase sm:text-xs">
+              Tap To Open
             </p>
           </div>
         </motion.div>
