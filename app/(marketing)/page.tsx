@@ -144,16 +144,16 @@ export default async function HomePage() {
             </p>
           </Reveal>
 
-          <RevealStagger className="mt-16 grid gap-6 sm:grid-cols-3" staggerDelay={0.15}>
-            {DRESS_CODE_IMAGES.map((src, i) => (
-              <RevealItem key={src} className={i === 1 ? "sm:translate-y-10" : ""}>
+          <RevealStagger className="mx-auto mt-16 grid max-w-3xl gap-6 sm:grid-cols-2" staggerDelay={0.15}>
+            {DRESS_CODE_IMAGES.map((src) => (
+              <RevealItem key={src}>
                 <TiltCard>
                   <div className="group relative aspect-[3/4] overflow-hidden rounded-2xl shadow-warm-lg">
                     <Image
                       src={src}
                       alt="Dress code inspiration"
                       fill
-                      sizes="(max-width: 640px) 100vw, 33vw"
+                      sizes="(max-width: 640px) 100vw, 50vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
